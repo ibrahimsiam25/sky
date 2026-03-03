@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Sky" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Base.Theme.Sky" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:fitsSystemWindows">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.Sky" parent="Base.Theme.Sky" />
 </resources>

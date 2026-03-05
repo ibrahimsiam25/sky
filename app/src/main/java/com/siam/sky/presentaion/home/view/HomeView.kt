@@ -1,4 +1,4 @@
-package com.siam.sky.presentaion.home.view
+﻿package com.siam.sky.presentaion.home.view
 
 import android.Manifest
 import android.content.Intent
@@ -7,32 +7,30 @@ import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.siam.sky.R
 import com.siam.sky.core.helper.LocationHelper
 import com.siam.sky.data.datasources.local.UserLocalDataSource
+import com.siam.sky.data.models.WeatherResponse
 import com.siam.sky.data.repo.UserRepo
+import com.siam.sky.core.ApiState
 import com.siam.sky.presentaion.home.viewmodel.HomeViewModel
 import com.siam.sky.presentaion.home.viewmodel.PermissionStatus
 
@@ -47,7 +45,7 @@ fun HomeView() {
 
     val location by viewModel.locationState.collectAsState()
     val permissionStatus by viewModel.permissionStatus.collectAsState()
-
+    val weatherState by viewModel.weatherState.collectAsState()
 
     val appSettingsLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -57,7 +55,6 @@ fun HomeView() {
         }
     }
 
-
     val locationSettingsLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
@@ -65,7 +62,6 @@ fun HomeView() {
             viewModel.getFreshLocation()
         }
     }
-
 
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -90,7 +86,6 @@ fun HomeView() {
         }
     }
 
-
     LaunchedEffect(Unit) {
         if (LocationHelper.checkPermission(context)) {
             viewModel.setPermissionStatus(PermissionStatus.GRANTED)
@@ -103,7 +98,6 @@ fun HomeView() {
             )
         }
     }
-
 
     LaunchedEffect(permissionStatus) {
         when (permissionStatus) {
@@ -150,23 +144,132 @@ fun HomeView() {
             modifier = Modifier
                 .fillMaxSize()
                 .safeDrawingPadding()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 16.dp)
         ) {
-            if (location != null) {
-                Text(
-                    text = "Lat: ${location!!.latitude}  |  Lon: ${location!!.longitude}",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            } else {
-                Text(
-                    text = "Fetching location�",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-            Button(onClick = {}) {
-                Text("Click Me")
+            when (val state = weatherState) {
+                is ApiState.Loading -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 40.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = Color.White)
+                    }
+                }
+                is ApiState.Success -> {
+                    WeatherContent(weather = state.data)
+                }
+                is ApiState.Error -> {
+                    Text(
+                        text = "Error: ${state.message}",
+                        color = Color.Red,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                is ApiState.Idle -> {
+                    Text(
+                        text = if (location == null) "Fetching location..." else "Loading weather...",
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun WeatherContent(weather: WeatherResponse) {
+    val iconCode = weather.weather.firstOrNull()?.icon ?: "01d"
+    val iconUrl = "https://openweathermap.org/img/wn/${iconCode}@2x.png"
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        // City & Country
+        Text(
+            text = "${weather.name}, ${weather.sys.country}",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Weather icon
+        GlideImage(
+            model = iconUrl,
+            contentDescription = "weather icon",
+            modifier = Modifier.size(100.dp)
+        )
+
+        // Temperature
+        Text(
+            text = "${weather.main.temp.toInt()}Â°C",
+            fontSize = 64.sp,
+            fontWeight = FontWeight.ExtraBold,
+            color = Color.White
+        )
+
+        // Description
+        Text(
+            text = weather.weather.firstOrNull()?.description?.replaceFirstChar { it.uppercase() } ?: "",
+            fontSize = 18.sp,
+            color = Color.White
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Details row
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            WeatherDetailItem(label = "Feels Like", value = "${weather.main.feels_like.toInt()}Â°C")
+            WeatherDetailItem(label = "Humidity", value = "${weather.main.humidity}%")
+            WeatherDetailItem(label = "Wind", value = "${weather.wind.speed} m/s")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            WeatherDetailItem(label = "Min Temp", value = "${weather.main.temp_min.toInt()}Â°C")
+            WeatherDetailItem(label = "Max Temp", value = "${weather.main.temp_max.toInt()}Â°C")
+            WeatherDetailItem(label = "Pressure", value = "${weather.main.pressure} hPa")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            WeatherDetailItem(label = "Visibility", value = "${weather.visibility / 1000} km")
+            WeatherDetailItem(label = "Clouds", value = "${weather.clouds.all}%")
+        }
+    }
+}
+
+@Composable
+fun WeatherDetailItem(label: String, value: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = value,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+            color = Color.White
+        )
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            color = Color.White.copy(alpha = 0.7f)
+        )
     }
 }

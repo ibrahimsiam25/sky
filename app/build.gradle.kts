@@ -2,8 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0"
-    id("com.google.devtools.ksp") version "2.0.21-1.0.28"
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -65,10 +65,11 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.github.bumptech.glide:glide:5.0.5")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose-android:2.8.7")
-    val room_version = "2.8.4"
+    //Room
+    val room_version = "2.6.1"
     implementation("androidx.room:room-ktx:${room_version}")
     implementation("androidx.room:room-runtime:$room_version")
-//    annotationProcessor("androidx.room:room-compiler:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
     //LiveData & Compose
     val compose_version = "1.0.0"

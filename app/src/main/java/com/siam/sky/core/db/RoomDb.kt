@@ -6,19 +6,19 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.siam.sky.data.datasources.local.WeatherDao
-import com.siam.sky.data.models.WeatherModel
+import com.siam.sky.data.models.WeatherEntity
 
-@Database(entities = [WeatherModel::class], version = 1)
+@Database(entities = [WeatherEntity::class], version = 1, exportSchema = false)
 abstract class WeatherDataBase : RoomDatabase() {
     abstract fun getWeatherDao(): WeatherDao
 
     companion object {
         @Volatile
-        private var INSTANCE:  WeatherDataBase? = null
-        fun getInstance(ctx: Context):  WeatherDataBase {
+        private var INSTANCE: WeatherDataBase? = null
+        fun getInstance(ctx: Context): WeatherDataBase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
-                    ctx.applicationContext,  WeatherDataBase::class.java, " WeatherDataBase"
+                    ctx.applicationContext, WeatherDataBase::class.java, "WeatherDataBase"
                 )
                     .build()
                 INSTANCE = instance

@@ -1,9 +1,13 @@
 package com.siam.sky.data.repo
 
-import com.siam.sky.data.datasources.local.WeatherLocalDataSource
+import com.siam.sky.core.ApiState
+import com.siam.sky.data.datasources.remote.WeatherRemoteDataSource
+import com.siam.sky.data.models.WeatherResponse
+import kotlinx.coroutines.flow.Flow
 
 class WeatherRepo(
-    private val weatherLocalDataSource: WeatherLocalDataSource
+    private val weatherRemoteDataSource: WeatherRemoteDataSource = WeatherRemoteDataSource()
 ) {
-    // weather-related operations will go here
+    fun getCurrentWeather(lat: Double, lon: Double): Flow<ApiState<WeatherResponse>> =
+        weatherRemoteDataSource.getCurrentWeather(lat, lon)
 }

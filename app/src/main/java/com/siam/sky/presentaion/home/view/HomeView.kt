@@ -129,10 +129,11 @@ fun HomeView() {
         }
     }
 
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .windowInsetsPadding(WindowInsets(0))
+
     ) {
         Image(
             painterResource(R.drawable.homebackground),

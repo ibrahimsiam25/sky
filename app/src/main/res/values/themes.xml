@@ -4,8 +4,8 @@
     <style name="Base.Theme.Sky" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:fitsSystemWindows">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/system_bar_red</item>
+        <item name="android:navigationBarColor">@color/system_bar_red</item>
     </style>
 
     <style name="Theme.Sky" parent="Base.Theme.Sky" />

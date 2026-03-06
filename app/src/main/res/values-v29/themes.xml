@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Sky" parent="Base.Theme.Sky">
+        <item name="android:navigationBarColor">@color/system_bar_red</item>
+        <item name="android:enforceNavigationBarContrast">false</item>
+    </style>
+</resources>

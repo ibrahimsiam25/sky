@@ -4,7 +4,17 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class Route {
+
     @Serializable
     object HomeView : Route()
+
+    @Serializable
+    object AlertsView : Route()
+
+    @Serializable
+    object FavouriteView : Route()
+
+    @Serializable
+    object SettingsView : Route()
 
 }

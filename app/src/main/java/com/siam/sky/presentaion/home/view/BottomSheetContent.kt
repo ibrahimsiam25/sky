@@ -54,11 +54,6 @@ fun BottomSheetContent(
                 ),
                 shape = RoundedCornerShape(topStart = 44.dp, topEnd = 44.dp)
             )
-            .border(
-                width = 1.dp,
-                brush = Brush.verticalGradient(listOf(Color.White, Color.Transparent)),
-                shape = RoundedCornerShape(topStart = 44.dp, topEnd = 44.dp)
-            )
             .verticalScroll(rememberScrollState())
             .padding(bottom = 40.dp)
     ) {

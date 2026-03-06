@@ -54,6 +54,8 @@ fun HomeScaffold(
             sheetPeekHeight = 280.dp,
             sheetShape = RoundedCornerShape(topStart = 44.dp, topEnd = 44.dp),
             sheetContainerColor = Color.Transparent,
+            sheetShadowElevation = 0.dp,
+            sheetTonalElevation = 0.dp,
             sheetDragHandle = {
                 Box(
                     modifier = Modifier

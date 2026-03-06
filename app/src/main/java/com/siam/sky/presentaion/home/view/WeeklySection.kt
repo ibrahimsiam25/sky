@@ -80,8 +80,6 @@ fun DailyForecastCard(item: DailyItem) {
     val iconCode = item.weather.firstOrNull()?.icon ?: "01d"
     val cardDrawable = forecastDrawableForWeather(
         iconCode = iconCode,
-        description = item.weather.firstOrNull()?.description.orEmpty(),
-        temp = item.temp.day
     )
     val description = item.weather.firstOrNull()?.description
         ?.replaceFirstChar { it.uppercase() } ?: ""

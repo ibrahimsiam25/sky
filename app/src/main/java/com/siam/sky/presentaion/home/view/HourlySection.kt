@@ -87,8 +87,6 @@ fun HourlyCard(item: HourlyItem, isNow: Boolean) {
 
     val iconRes = forecastDrawableForWeather(
         iconCode = item.weather.firstOrNull()?.icon ?: "01d",
-        description = item.weather.firstOrNull()?.description.orEmpty(),
-        temp = item.main.temp
     )
     val popPercent = (item.pop * 100).toInt()
 

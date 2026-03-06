@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.siam.sky.core.ApiState
+import com.siam.sky.data.models.DailyForecastResponse
+import com.siam.sky.data.models.HourlyForecastResponse
 import com.siam.sky.data.models.WeatherResponse
 import com.siam.sky.data.repo.UserRepo
 import com.siam.sky.data.repo.WeatherRepo
@@ -29,6 +31,12 @@ class HomeViewModel(
     private val _weatherState = MutableStateFlow<ApiState<WeatherResponse>>(ApiState.Idle)
     val weatherState: StateFlow<ApiState<WeatherResponse>> = _weatherState.asStateFlow()
 
+    private val _hourlyState = MutableStateFlow<ApiState<HourlyForecastResponse>>(ApiState.Idle)
+    val hourlyState: StateFlow<ApiState<HourlyForecastResponse>> = _hourlyState.asStateFlow()
+
+    private val _dailyState = MutableStateFlow<ApiState<DailyForecastResponse>>(ApiState.Idle)
+    val dailyState: StateFlow<ApiState<DailyForecastResponse>> = _dailyState.asStateFlow()
+
     fun setPermissionStatus(status: PermissionStatus) {
         _permissionStatus.value = status
     }
@@ -44,10 +52,29 @@ class HomeViewModel(
 
     fun fetchWeather(lat: Double, lon: Double) {
         viewModelScope.launch {
-            weatherRepo.getCurrentWeather(lat, lon)
-                .collect { state ->
-                    _weatherState.value = state
+            weatherRepo.getCurrentWeather(lat, lon).collect { state ->
+                _weatherState.value = state
+                if (state is ApiState.Success) {
+                    fetchHourlyForecast(state.data.name)
+                    fetchDailyForecast(state.data.name)
                 }
+            }
+        }
+    }
+
+    private fun fetchHourlyForecast(city: String) {
+        viewModelScope.launch {
+            weatherRepo.getHourlyForecast(city).collect { state ->
+                _hourlyState.value = state
+            }
+        }
+    }
+
+    private fun fetchDailyForecast(city: String) {
+        viewModelScope.launch {
+            weatherRepo.getDailyForecast(city, cnt = 7).collect { state ->
+                _dailyState.value = state
+            }
         }
     }
 
@@ -60,4 +87,5 @@ class HomeViewModel(
         }
     }
 }
+
 

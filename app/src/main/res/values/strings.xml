@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">sky</string>
+
+    <string name="fetching_location">Fetching location…</string>
+    <string name="loading_weather">Loading weather…</string>
+    <string name="error_prefix">Error: %1$s</string>
+
+    <string name="tab_hourly_forecast">Hourly Forecast</string>
+    <string name="tab_weekly_forecast">Weekly Forecast</string>
+
+    <string name="hourly_unavailable">Hourly unavailable</string>
+    <string name="weekly_unavailable">Weekly forecast unavailable</string>
+
+    <string name="label_now">Now</string>
+
+    <string name="todays_details">Today\'s Details</string>
+    <string name="label_humidity">HUMIDITY</string>
+    <string name="label_wind">WIND</string>
+    <string name="label_pressure">PRESSURE</string>
+    <string name="label_clouds">CLOUDS</string>
+    <string name="label_sunrise">SUNRISE</string>
+    <string name="label_sunset">SUNSET</string>
+
+    <string name="unit_ms">%1$s m/s</string>
+    <string name="unit_hpa">%1$s hPa</string>
+    <string name="unit_percent">%1$s%%</string>
+
+    <string name="high_low">H:%1$d° L:%2$d°</string>
 </resources>

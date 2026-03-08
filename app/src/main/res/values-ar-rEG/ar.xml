@@ -40,4 +40,5 @@
     <string name="language_arabic">العربية</string>
     <string name="language_arabic_subtitle">واجهة من اليمين إلى اليسار مع بيانات الطقس باللغة
         العربية.</string>
+    <string name="home_error_title">تعذر تحميل الطقس</string>
 </resources>

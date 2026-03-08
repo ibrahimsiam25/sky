@@ -94,12 +94,12 @@ fun DailyForecastCard(item: DailyItem) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(all = 8.dp),
+            .padding(all = 12.dp),
     ) {
         Image(
             painter = painterResource(R.drawable.weathercard),
             contentDescription = null,
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.Fit,
             modifier = Modifier
                 .matchParentSize()
                 .graphicsLayer {
@@ -164,3 +164,5 @@ fun DailyForecastCard(item: DailyItem) {
         }
     }
 }
+
+

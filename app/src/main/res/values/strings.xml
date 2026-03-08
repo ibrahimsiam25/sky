@@ -38,4 +38,5 @@
     <string name="language_english_subtitle">Left to right interface with English weather data.</string>
     <string name="language_arabic">العربية</string>
     <string name="language_arabic_subtitle">واجهة من اليمين لليسار مع بيانات الطقس بالعربية.</string>
+    <string name="home_error_title">Unable to load weather</string>
 </resources>

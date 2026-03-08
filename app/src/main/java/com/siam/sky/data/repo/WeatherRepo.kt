@@ -7,9 +7,7 @@ import com.siam.sky.data.models.HourlyForecastResponse
 import com.siam.sky.data.models.WeatherResponse
 import kotlinx.coroutines.flow.Flow
 
-class WeatherRepo(
-    private val weatherRemoteDataSource: WeatherRemoteDataSource = WeatherRemoteDataSource()
-) {
+class WeatherRepo(private val weatherRemoteDataSource: WeatherRemoteDataSource) {
     fun getCurrentWeather(lat: Double, lon: Double, language: String): Flow<ApiState<WeatherResponse>> =
         weatherRemoteDataSource.getCurrentWeather(lat, lon, language)
 

@@ -39,7 +39,7 @@ class UserLocalDataSource(private val context: Context) {
             }
         }
 
-        trySend(getSavedAppLanguage())
+
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
 
         awaitClose {

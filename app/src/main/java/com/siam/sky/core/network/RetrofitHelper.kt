@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 object RetrofitHelper {
-    const val APIKEY = "a50b3547c713e7be1ec57c696006497f"
+
     const val BASE_URL = "https://pro.openweathermap.org/"
     private const val NETWORK_LOG_TAG = "SkyApi"
 

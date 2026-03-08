@@ -21,10 +21,11 @@ enum class PermissionStatus { UNKNOWN, GRANTED, DENIED, PERMANENTLY_DENIED }
 
 class HomeViewModel(
     private val userRepo: UserRepo,
-    private val weatherRepo: WeatherRepo = WeatherRepo()
+    private val weatherRepo: WeatherRepo
 ) : ViewModel() {
 
     private var currentLanguage: AppLanguage = userRepo.getSavedAppLanguage()
+    private var locationJob: Job? = null
     private var weatherJob: Job? = null
     private var hourlyJob: Job? = null
     private var dailyJob: Job? = null
@@ -46,14 +47,16 @@ class HomeViewModel(
 
     init {
         observeLanguageChanges()
+        observePermissionChanges()
     }
 
     fun setPermissionStatus(status: PermissionStatus) {
         _permissionStatus.value = status
     }
 
-    fun getFreshLocation() {
-        viewModelScope.launch {
+    private fun requestFreshLocation() {
+        locationJob?.cancel()
+        locationJob = viewModelScope.launch {
             userRepo.getFreshLocation().collect { location ->
                 _locationState.value = location
                 fetchWeather(location.latitude, location.longitude)
@@ -109,11 +112,21 @@ class HomeViewModel(
         }
     }
 
+    private fun observePermissionChanges() {
+        viewModelScope.launch {
+            _permissionStatus.collect { status ->
+                if (status == PermissionStatus.GRANTED && _locationState.value == null) {
+                    requestFreshLocation()
+                }
+            }
+        }
+    }
+
     companion object {
-        fun factory(userRepo: UserRepo) = object : ViewModelProvider.Factory {
+        fun factory(userRepo: UserRepo, weatherRepo: WeatherRepo) = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HomeViewModel(userRepo) as T
+                return HomeViewModel(userRepo, weatherRepo ) as T
             }
         }
     }

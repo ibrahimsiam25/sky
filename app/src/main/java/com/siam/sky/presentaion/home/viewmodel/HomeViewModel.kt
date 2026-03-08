@@ -5,11 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.siam.sky.core.ApiState
+import com.siam.sky.core.helper.AppLanguage
 import com.siam.sky.data.models.DailyForecastResponse
 import com.siam.sky.data.models.HourlyForecastResponse
 import com.siam.sky.data.models.WeatherResponse
 import com.siam.sky.data.repo.UserRepo
 import com.siam.sky.data.repo.WeatherRepo
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,6 +23,11 @@ class HomeViewModel(
     private val userRepo: UserRepo,
     private val weatherRepo: WeatherRepo = WeatherRepo()
 ) : ViewModel() {
+
+    private var currentLanguage: AppLanguage = userRepo.getSavedAppLanguage()
+    private var weatherJob: Job? = null
+    private var hourlyJob: Job? = null
+    private var dailyJob: Job? = null
 
     private val _locationState = MutableStateFlow<Location?>(null)
     val locationState: StateFlow<Location?> = _locationState.asStateFlow()
@@ -37,6 +44,10 @@ class HomeViewModel(
     private val _dailyState = MutableStateFlow<ApiState<DailyForecastResponse>>(ApiState.Idle)
     val dailyState: StateFlow<ApiState<DailyForecastResponse>> = _dailyState.asStateFlow()
 
+    init {
+        observeLanguageChanges()
+    }
+
     fun setPermissionStatus(status: PermissionStatus) {
         _permissionStatus.value = status
     }
@@ -51,8 +62,12 @@ class HomeViewModel(
     }
 
     fun fetchWeather(lat: Double, lon: Double) {
-        viewModelScope.launch {
-            weatherRepo.getCurrentWeather(lat, lon).collect { state ->
+        weatherJob?.cancel()
+        hourlyJob?.cancel()
+        dailyJob?.cancel()
+
+        weatherJob = viewModelScope.launch {
+            weatherRepo.getCurrentWeather(lat, lon, currentLanguage.apiLanguage).collect { state ->
                 _weatherState.value = state
                 if (state is ApiState.Success) {
                     fetchHourlyForecast(state.data.name)
@@ -63,17 +78,33 @@ class HomeViewModel(
     }
 
     private fun fetchHourlyForecast(city: String) {
-        viewModelScope.launch {
-            weatherRepo.getHourlyForecast(city).collect { state ->
+        hourlyJob?.cancel()
+        hourlyJob = viewModelScope.launch {
+            weatherRepo.getHourlyForecast(city, currentLanguage.apiLanguage).collect { state ->
                 _hourlyState.value = state
             }
         }
     }
 
     private fun fetchDailyForecast(city: String) {
-        viewModelScope.launch {
-            weatherRepo.getDailyForecast(city, cnt = 7).collect { state ->
+        dailyJob?.cancel()
+        dailyJob = viewModelScope.launch {
+            weatherRepo.getDailyForecast(city, currentLanguage.apiLanguage, cnt = 7).collect { state ->
                 _dailyState.value = state
+            }
+        }
+    }
+
+    private fun observeLanguageChanges() {
+        viewModelScope.launch {
+            userRepo.observeAppLanguage().collect { language ->
+                val changed = currentLanguage != language
+                currentLanguage = language
+
+                val currentLocation = _locationState.value
+                if (changed && currentLocation != null) {
+                    fetchWeather(currentLocation.latitude, currentLocation.longitude)
+                }
             }
         }
     }

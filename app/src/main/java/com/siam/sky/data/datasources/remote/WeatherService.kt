@@ -21,6 +21,7 @@ interface WeatherService {
     suspend fun getDailyForecast(
         @Query("q") city: String,
         @Query("appid") appId: String = RetrofitHelper.APIKEY,
+        @Query("lang") lang: String = "en",
         @Query("units") units: String = "metric",
         @Query("cnt") cnt: Int = 3
     ): DailyForecastResponse

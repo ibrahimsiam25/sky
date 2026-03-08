@@ -10,12 +10,12 @@ import kotlinx.coroutines.flow.Flow
 class WeatherRepo(
     private val weatherRemoteDataSource: WeatherRemoteDataSource = WeatherRemoteDataSource()
 ) {
-    fun getCurrentWeather(lat: Double, lon: Double): Flow<ApiState<WeatherResponse>> =
-        weatherRemoteDataSource.getCurrentWeather(lat, lon)
+    fun getCurrentWeather(lat: Double, lon: Double, language: String): Flow<ApiState<WeatherResponse>> =
+        weatherRemoteDataSource.getCurrentWeather(lat, lon, language)
 
-    fun getHourlyForecast(city: String): Flow<ApiState<HourlyForecastResponse>> =
-        weatherRemoteDataSource.getHourlyForecast(city)
+    fun getHourlyForecast(city: String, language: String): Flow<ApiState<HourlyForecastResponse>> =
+        weatherRemoteDataSource.getHourlyForecast(city, language)
 
-    fun getDailyForecast(city: String, cnt: Int = 7): Flow<ApiState<DailyForecastResponse>> =
-        weatherRemoteDataSource.getDailyForecast(city, cnt)
+    fun getDailyForecast(city: String, language: String, cnt: Int = 7): Flow<ApiState<DailyForecastResponse>> =
+        weatherRemoteDataSource.getDailyForecast(city, language, cnt)
 }

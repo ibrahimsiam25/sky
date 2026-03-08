@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import com.siam.sky.R
 import com.siam.sky.core.ApiState
 import com.siam.sky.core.helper.forecastDrawableForWeather
@@ -82,8 +84,10 @@ fun HourlySection(state: ApiState<HourlyForecastResponse>) {
 
 @Composable
 fun HourlyCard(item: HourlyItem, isNow: Boolean) {
+    val configuration = LocalConfiguration.current
+    val locale = configuration.locales[0] ?: Locale.getDefault()
     val timeLabel = if (isNow) stringResource(R.string.label_now)
-    else SimpleDateFormat("h a", Locale.ENGLISH).format(Date(item.dt * 1000L))
+    else SimpleDateFormat("h a", locale).format(Date(item.dt * 1000L))
 
     val iconRes = forecastDrawableForWeather(
         iconCode = item.weather.firstOrNull()?.icon ?: "01d",
@@ -93,7 +97,7 @@ fun HourlyCard(item: HourlyItem, isNow: Boolean) {
     Box(
         modifier = Modifier
             .width(60.dp)
-            .height(146.dp)
+            .height(160.dp)
             .clip(RoundedCornerShape(30.dp))
             .background(if (isNow) HourCardSelected else HourCardRegular)
             .border(
@@ -112,10 +116,15 @@ fun HourlyCard(item: HourlyItem, isNow: Boolean) {
         ) {
             Text(
                 text = timeLabel,
+                maxLines = 1,
+                overflow = TextOverflow.Visible,
+                softWrap = false,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = (-0.5).sp,
-                color = Color.White
+                color = Color.White,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
             )
 
             Box(

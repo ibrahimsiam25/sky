@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import com.siam.sky.R
 import com.siam.sky.core.ApiState
 import com.siam.sky.data.models.DailyForecastResponse
@@ -70,8 +71,16 @@ fun BottomSheetContent(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                ForecastTab(title = stringResource(R.string.tab_hourly_forecast), selected = selectedTab == 0) { selectedTab = 0 }
-                ForecastTab(title = stringResource(R.string.tab_weekly_forecast), selected = selectedTab == 1) { selectedTab = 1 }
+
+                ForecastTab(
+                    title = stringResource(R.string.tab_hourly_forecast),
+                    selected = selectedTab == 0
+                ) { selectedTab = 0 }
+
+                ForecastTab(
+                    title = stringResource(R.string.tab_weekly_forecast),
+                    selected = selectedTab == 1
+                ) { selectedTab = 1 }
             }
             Box(
                 modifier = Modifier
@@ -95,19 +104,23 @@ fun BottomSheetContent(
         }
     }
 }
-
 @Composable
-fun ForecastTab(title: String, selected: Boolean, onClick: () -> Unit) {
-    Column(
-        modifier = Modifier.clickable { onClick() }.padding(bottom = 6.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = title,
-            fontSize = 15.sp,
-            fontWeight = FontWeight.SemiBold,
-            letterSpacing = (-0.5).sp,
-            color = if (selected) Color.White else Color.White.copy(alpha = 0.60f)
-        )
-    }
+fun ForecastTab(
+    title: String,
+    selected: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Text(
+        modifier = modifier
+            .clickable { onClick() }
+            .padding(bottom = 6.dp),
+        text = title,
+        fontSize = 15.sp,
+        fontWeight = FontWeight.SemiBold,
+        letterSpacing = (-0.5).sp,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        color = if (selected) Color.White else Color.White.copy(alpha = 0.60f)
+    )
 }

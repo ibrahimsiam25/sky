@@ -22,4 +22,4 @@ fun forecastDrawableForWeather(iconCode: String,): Int {
 }
 
 fun timestampToTime(ts: Long): String =
-    SimpleDateFormat("h:mm a", Locale.ENGLISH).format(Date(ts * 1000L))
+    SimpleDateFormat("h:mm a", Locale.getDefault()).format(Date(ts * 1000L))

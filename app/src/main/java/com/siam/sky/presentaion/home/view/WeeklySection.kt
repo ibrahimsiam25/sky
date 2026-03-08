@@ -16,12 +16,16 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
@@ -74,8 +78,11 @@ fun WeeklySection(
 
 @Composable
 fun DailyForecastCard(item: DailyItem) {
+    val configuration = LocalConfiguration.current
+    val locale = configuration.locales[0] ?: Locale.getDefault()
+    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     val dayName = remember(item.dt) {
-        SimpleDateFormat("EEEE, MMM dd", Locale.ENGLISH).format(Date(item.dt * 1000L))
+        SimpleDateFormat("EEEE, MMM dd", locale).format(Date(item.dt * 1000L))
     }
     val iconCode = item.weather.firstOrNull()?.icon ?: "01d"
     val cardDrawable = forecastDrawableForWeather(
@@ -93,7 +100,11 @@ fun DailyForecastCard(item: DailyItem) {
             painter = painterResource(R.drawable.weathercard),
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.matchParentSize()
+            modifier = Modifier
+                .matchParentSize()
+                .graphicsLayer {
+                    scaleX = if (isRtl) -1f else 1f
+                }
         )
 
 
@@ -134,7 +145,7 @@ fun DailyForecastCard(item: DailyItem) {
                             color = Color.White.copy(alpha = 0.90f)
                         )
                         Text(
-                            text = "H:${item.temp.max.toInt()}°  L:${item.temp.min.toInt()}°",
+                            text = stringResource(R.string.high_low, item.temp.max.toInt(), item.temp.min.toInt()),
                             fontSize = 12.sp,
                             color = WhiteFaded
                         )

@@ -11,30 +11,30 @@ import kotlinx.coroutines.flow.flow
 class WeatherRemoteDataSource {
     private val weatherService: WeatherService = RetrofitHelper.weatherService
 
-    fun getCurrentWeather(lat: Double, lon: Double): Flow<ApiState<WeatherResponse>> = flow {
+    fun getCurrentWeather(lat: Double, lon: Double, language: String): Flow<ApiState<WeatherResponse>> = flow {
         emit(ApiState.Loading)
         try {
-            val response = weatherService.getCurrentWeather(lat = lat, lon = lon)
+            val response = weatherService.getCurrentWeather(lat = lat, lon = lon, lang = language)
             emit(ApiState.Success(response))
         } catch (e: Exception) {
             emit(ApiState.Error(e.message ?: "Unknown error"))
         }
     }
 
-    fun getHourlyForecast(city: String): Flow<ApiState<HourlyForecastResponse>> = flow {
+    fun getHourlyForecast(city: String, language: String): Flow<ApiState<HourlyForecastResponse>> = flow {
         emit(ApiState.Loading)
         try {
-            val response = weatherService.getHourlyForecast(city = city)
+            val response = weatherService.getHourlyForecast(city = city, lang = language)
             emit(ApiState.Success(response))
         } catch (e: Exception) {
             emit(ApiState.Error(e.message ?: "Unknown error"))
         }
     }
 
-    fun getDailyForecast(city: String, cnt: Int = 3): Flow<ApiState<DailyForecastResponse>> = flow {
+    fun getDailyForecast(city: String, language: String, cnt: Int = 3): Flow<ApiState<DailyForecastResponse>> = flow {
         emit(ApiState.Loading)
         try {
-            val response = weatherService.getDailyForecast(city = city, cnt = cnt)
+            val response = weatherService.getDailyForecast(city = city, lang = language, cnt = cnt)
             emit(ApiState.Success(response))
         } catch (e: Exception) {
             emit(ApiState.Error(e.message ?: "Unknown error"))

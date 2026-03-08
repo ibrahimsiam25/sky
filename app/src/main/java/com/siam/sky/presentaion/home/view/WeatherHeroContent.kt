@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -25,9 +27,11 @@ import java.util.Locale
 
 @Composable
 fun WeatherHeroContent(weather: WeatherResponse) {
+    val configuration = LocalConfiguration.current
+    val locale = configuration.locales[0] ?: Locale.getDefault()
     val now = remember { Calendar.getInstance() }
-    val dateStr = remember { SimpleDateFormat("EEEE, MMM dd", Locale.ENGLISH).format(now.time) }
-    val timeStr = remember { SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(now.time) }
+    val dateStr = remember(locale) { SimpleDateFormat("EEEE, MMM dd", locale).format(now.time) }
+    val timeStr = remember(locale) { SimpleDateFormat("hh:mm a", locale).format(now.time) }
     val iconCode = weather.weather.firstOrNull()?.icon ?: "01d"
 
     Spacer(modifier = Modifier.height(20.dp))
@@ -59,7 +63,12 @@ fun WeatherHeroContent(weather: WeatherResponse) {
     Spacer(modifier = Modifier.height(4.dp))
     Text("$dateStr  •  $timeStr", fontSize = 13.sp, color = WhiteFaded, textAlign = TextAlign.Center, modifier = Modifier.padding(horizontal = 24.dp))
     Spacer(modifier = Modifier.height(6.dp))
-    Text("H:${weather.main.temp_max.toInt()}°   L:${weather.main.temp_min.toInt()}°", fontSize = 15.sp, color = Color.White.copy(alpha = 0.8f), modifier = Modifier.padding(horizontal = 24.dp))
+    Text(
+        text = stringResource(R.string.high_low, weather.main.temp_max.toInt(), weather.main.temp_min.toInt()),
+        fontSize = 15.sp,
+        color = Color.White.copy(alpha = 0.8f),
+        modifier = Modifier.padding(horizontal = 24.dp)
+    )
     Spacer(modifier = Modifier.height(16.dp))
     Image(
         painter = painterResource(id = R.drawable.house),

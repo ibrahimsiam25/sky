@@ -41,13 +41,13 @@ fun DayDetailSection(weather: WeatherResponse) {
             modifier = Modifier.padding(bottom = 12.dp)
         )
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            DayDetailCard(Modifier.weight(1f), emoji = "💧", label = stringResource(R.string.label_humidity), value = "${weather.main.humidity}%")
-            DayDetailCard(Modifier.weight(1f), emoji = "💨", label = stringResource(R.string.label_wind), value = "${weather.wind.speed} m/s")
+            DayDetailCard(Modifier.weight(1f), emoji = "💧", label = stringResource(R.string.label_humidity), value = stringResource(R.string.unit_percent, weather.main.humidity))
+            DayDetailCard(Modifier.weight(1f), emoji = "💨", label = stringResource(R.string.label_wind), value = stringResource(R.string.unit_ms, weather.wind.speed))
         }
         Spacer(modifier = Modifier.height(12.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            DayDetailCard(Modifier.weight(1f), emoji = "🌡", label = stringResource(R.string.label_pressure), value = "${weather.main.pressure} hPa")
-            DayDetailCard(Modifier.weight(1f), emoji = "☁️", label = stringResource(R.string.label_clouds), value = "${weather.clouds.all}%")
+            DayDetailCard(Modifier.weight(1f), emoji = "🌡", label = stringResource(R.string.label_pressure), value = stringResource(R.string.unit_hpa, weather.main.pressure))
+            DayDetailCard(Modifier.weight(1f), emoji = "☁️", label = stringResource(R.string.label_clouds), value = stringResource(R.string.unit_percent, weather.clouds.all))
         }
         Spacer(modifier = Modifier.height(12.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {

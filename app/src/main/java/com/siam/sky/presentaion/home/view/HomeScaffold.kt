@@ -30,6 +30,7 @@ import com.siam.sky.data.models.HourlyForecastResponse
 import com.siam.sky.data.models.WeatherResponse
 import android.location.Location
 import androidx.compose.foundation.layout.height
+import com.siam.sky.core.common.Background
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,12 +43,7 @@ fun HomeScaffold(
     val scaffoldState = rememberBottomSheetScaffoldState()
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(R.drawable.homebackground),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
+         Background()
 
         BottomSheetScaffold(
             scaffoldState = scaffoldState,

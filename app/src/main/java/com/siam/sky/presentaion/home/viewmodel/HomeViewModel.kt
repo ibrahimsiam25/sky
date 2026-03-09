@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.siam.sky.core.ApiState
 import com.siam.sky.core.helper.AppLanguage
+import com.siam.sky.core.helper.AppUnit
 import com.siam.sky.data.models.DailyForecastResponse
 import com.siam.sky.data.models.HourlyForecastResponse
 import com.siam.sky.data.models.WeatherResponse
@@ -25,6 +26,7 @@ class HomeViewModel(
 ) : ViewModel() {
 
     private var currentLanguage: AppLanguage = userRepo.getSavedAppLanguage()
+    private  var currentUnit: String = userRepo.getSavedAppUnit().unit
     private var locationJob: Job? = null
     private var weatherJob: Job? = null
     private var hourlyJob: Job? = null
@@ -45,9 +47,13 @@ class HomeViewModel(
     private val _dailyState = MutableStateFlow<ApiState<DailyForecastResponse>>(ApiState.Idle)
     val dailyState: StateFlow<ApiState<DailyForecastResponse>> = _dailyState.asStateFlow()
 
+    private val _unitState = MutableStateFlow(userRepo.getSavedAppUnit())
+    val unitState: StateFlow<AppUnit> = _unitState.asStateFlow()
+
     init {
-        observeLanguageChanges()
         observePermissionChanges()
+        observeUnitChanges()
+        observeLanguageChanges()
     }
 
     fun setPermissionStatus(status: PermissionStatus) {
@@ -70,7 +76,7 @@ class HomeViewModel(
         dailyJob?.cancel()
 
         weatherJob = viewModelScope.launch {
-            weatherRepo.getCurrentWeather(lat, lon, currentLanguage.apiLanguage).collect { state ->
+            weatherRepo.getCurrentWeather(lat, lon, currentLanguage.apiLanguage,currentUnit).collect { state ->
                 _weatherState.value = state
                 if (state is ApiState.Success) {
                     fetchHourlyForecast(state.data.name)
@@ -83,7 +89,7 @@ class HomeViewModel(
     private fun fetchHourlyForecast(city: String) {
         hourlyJob?.cancel()
         hourlyJob = viewModelScope.launch {
-            weatherRepo.getHourlyForecast(city, currentLanguage.apiLanguage).collect { state ->
+            weatherRepo.getHourlyForecast(city, currentLanguage.apiLanguage,currentUnit).collect { state ->
                 _hourlyState.value = state
             }
         }
@@ -92,7 +98,7 @@ class HomeViewModel(
     private fun fetchDailyForecast(city: String) {
         dailyJob?.cancel()
         dailyJob = viewModelScope.launch {
-            weatherRepo.getDailyForecast(city, currentLanguage.apiLanguage, cnt = 7).collect { state ->
+            weatherRepo.getDailyForecast(city, currentLanguage.apiLanguage, cnt = 7,currentUnit).collect { state ->
                 _dailyState.value = state
             }
         }
@@ -111,7 +117,19 @@ class HomeViewModel(
             }
         }
     }
-
+    private fun observeUnitChanges() {
+        viewModelScope.launch {
+            userRepo.observeUnit().collect { unit ->
+                val changed = currentUnit != unit.unit
+                currentUnit = unit.unit
+                _unitState.value = unit
+                val currentLocation = _locationState.value
+                if (changed && currentLocation != null) {
+                    fetchWeather(currentLocation.latitude, currentLocation.longitude)
+                }
+            }
+        }
+    }
     private fun observePermissionChanges() {
         viewModelScope.launch {
             _permissionStatus.collect { status ->
@@ -126,7 +144,7 @@ class HomeViewModel(
         fun factory(userRepo: UserRepo, weatherRepo: WeatherRepo) = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HomeViewModel(userRepo, weatherRepo ) as T
+                return HomeViewModel(userRepo, weatherRepo) as T
             }
         }
     }

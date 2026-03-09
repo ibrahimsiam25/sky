@@ -25,7 +25,7 @@
     <string name="unit_hpa">%1$s hPa</string>
     <string name="unit_percent">%1$s%%</string>
 
-    <string name="high_low">H:%1$d° L:%2$d°</string>
+    <string name="high_low">H:%1$d%3$s L:%2$d%3$s</string>
 
     <string name="nav_home">Home</string>
     <string name="nav_alerts">Alerts</string>
@@ -39,4 +39,15 @@
     <string name="language_arabic">العربية</string>
     <string name="language_arabic_subtitle">واجهة من اليمين لليسار مع بيانات الطقس بالعربية.</string>
     <string name="home_error_title">Unable to load weather</string>
+
+
+    <string name="unit_standard">Standard (K, m/s)</string>
+    <string name="unit_metric">Metric (°C, m/s)</string>
+    <string name="unit_imperial">Imperial (°F, mi/h)</string>
+    <string name="settings_unit_title">Unit System</string>
+
+    <string name="unit_temp_c">°C</string>
+    <string name="unit_temp_f">°F</string>
+    <string name="unit_temp_k"> K</string>
+    <string name="unit_wind_mph">%1$s mi/h</string>
 </resources>

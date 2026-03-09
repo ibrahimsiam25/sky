@@ -20,13 +20,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.siam.sky.R
+import com.siam.sky.core.helper.AppUnit
 import com.siam.sky.core.helper.timestampToTime
 import com.siam.sky.data.models.WeatherResponse
 import com.siam.sky.ui.theme.CardBg
 import com.siam.sky.ui.theme.WhiteFaded
 
 @Composable
-fun DayDetailSection(weather: WeatherResponse) {
+fun DayDetailSection(weather: WeatherResponse, unit: AppUnit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -42,7 +43,12 @@ fun DayDetailSection(weather: WeatherResponse) {
         )
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             DayDetailCard(Modifier.weight(1f), emoji = "💧", label = stringResource(R.string.label_humidity), value = stringResource(R.string.unit_percent, weather.main.humidity))
-            DayDetailCard(Modifier.weight(1f), emoji = "💨", label = stringResource(R.string.label_wind), value = stringResource(R.string.unit_ms, weather.wind.speed))
+            DayDetailCard(Modifier.weight(1f), emoji = "💨", label = stringResource(R.string.label_wind),
+                value = when (unit) {
+                    AppUnit.IMPERIAL -> stringResource(R.string.unit_wind_mph, weather.wind.speed)
+                    else             -> stringResource(R.string.unit_ms, weather.wind.speed)
+                }
+            )
         }
         Spacer(modifier = Modifier.height(12.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {

@@ -35,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.siam.sky.R
 import com.siam.sky.core.ApiState
+import com.siam.sky.core.helper.AppUnit
 import com.siam.sky.core.helper.forecastDrawableForWeather
 import com.siam.sky.data.models.HourlyForecastResponse
 import com.siam.sky.data.models.HourlyItem
@@ -49,7 +50,7 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun HourlySection(state: ApiState<HourlyForecastResponse>) {
+fun HourlySection(state: ApiState<HourlyForecastResponse>, unit: AppUnit) {
     when (state) {
         is ApiState.Loading -> Box(
             modifier = Modifier.fillMaxWidth().height(146.dp),
@@ -66,7 +67,7 @@ fun HourlySection(state: ApiState<HourlyForecastResponse>) {
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 itemsIndexed(items) { index, item ->
-                    HourlyCard(item = item, isNow = index == nowIndex)
+                    HourlyCard(item = item, isNow = index == nowIndex, unit = unit)
                 }
             }
         }
@@ -83,11 +84,18 @@ fun HourlySection(state: ApiState<HourlyForecastResponse>) {
 }
 
 @Composable
-fun HourlyCard(item: HourlyItem, isNow: Boolean) {
+fun HourlyCard(item: HourlyItem, isNow: Boolean, unit: AppUnit) {
     val configuration = LocalConfiguration.current
     val locale = configuration.locales[0] ?: Locale.getDefault()
     val timeLabel = if (isNow) stringResource(R.string.label_now)
     else SimpleDateFormat("h a", locale).format(Date(item.dt * 1000L))
+    val tempUnitStr = stringResource(
+        when (unit) {
+            AppUnit.METRIC   -> R.string.unit_temp_c
+            AppUnit.IMPERIAL -> R.string.unit_temp_f
+            AppUnit.STANDARD -> R.string.unit_temp_k
+        }
+    )
 
     val iconRes = forecastDrawableForWeather(
         iconCode = item.weather.firstOrNull()?.icon ?: "01d",
@@ -151,11 +159,16 @@ fun HourlyCard(item: HourlyItem, isNow: Boolean) {
             }
 
             Text(
-                text = "${item.main.temp.toInt()}°",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Normal,
-                letterSpacing = 0.38.sp,
-                color = Color.White
+                text = "${item.main.temp.toInt()}$tempUnitStr",
+                maxLines = 1,
+                overflow = TextOverflow.Visible,
+                softWrap = false,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                letterSpacing = (-0.5).sp,
+                color = Color.White,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
             )
         }
     }

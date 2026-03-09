@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import com.siam.sky.R
 import com.siam.sky.core.ApiState
+import com.siam.sky.core.helper.AppUnit
 import com.siam.sky.core.helper.forecastDrawableForWeather
 import com.siam.sky.data.models.DailyForecastResponse
 import com.siam.sky.data.models.DailyItem
@@ -45,7 +46,8 @@ import java.util.Locale
 @Composable
 fun WeeklySection(
     state: ApiState<DailyForecastResponse>,
-    weatherState: ApiState<WeatherResponse>
+    weatherState: ApiState<WeatherResponse>,
+    unit: AppUnit
 ) {
     val cityName = if (weatherState is ApiState.Success)
         "${weatherState.data.name}, ${weatherState.data.sys.country}" else ""
@@ -61,7 +63,7 @@ fun WeeklySection(
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             state.data.list.forEach { item ->
-                DailyForecastCard(item = item)
+                DailyForecastCard(item = item, unit = unit)
             }
         }
 
@@ -77,7 +79,7 @@ fun WeeklySection(
 }
 
 @Composable
-fun DailyForecastCard(item: DailyItem) {
+fun DailyForecastCard(item: DailyItem, unit: AppUnit) {
     val configuration = LocalConfiguration.current
     val locale = configuration.locales[0] ?: Locale.getDefault()
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
@@ -90,6 +92,13 @@ fun DailyForecastCard(item: DailyItem) {
     )
     val description = item.weather.firstOrNull()?.description
         ?.replaceFirstChar { it.uppercase() } ?: ""
+    val tempUnitStr = stringResource(
+        when (unit) {
+            AppUnit.METRIC   -> R.string.unit_temp_c
+            AppUnit.IMPERIAL -> R.string.unit_temp_f
+            AppUnit.STANDARD -> R.string.unit_temp_k
+        }
+    )
 
     Box(
         modifier = Modifier
@@ -121,7 +130,7 @@ fun DailyForecastCard(item: DailyItem) {
             ) {
 
                 Text(
-                    text = "${item.temp.day.toInt()}°",
+                    text = "${item.temp.day.toInt()}$tempUnitStr",
                     fontSize = 60.sp,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 0.374.sp,
@@ -145,7 +154,7 @@ fun DailyForecastCard(item: DailyItem) {
                             color = Color.White.copy(alpha = 0.90f)
                         )
                         Text(
-                            text = stringResource(R.string.high_low, item.temp.max.toInt(), item.temp.min.toInt()),
+                            text = stringResource(R.string.high_low, item.temp.max.toInt(), item.temp.min.toInt(), tempUnitStr),
                             fontSize = 12.sp,
                             color = WhiteFaded
                         )

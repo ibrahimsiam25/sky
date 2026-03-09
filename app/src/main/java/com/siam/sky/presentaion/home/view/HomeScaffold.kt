@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.siam.sky.R
 import androidx.compose.ui.res.stringResource
 import com.siam.sky.core.ApiState
+import com.siam.sky.core.helper.AppUnit
 import com.siam.sky.data.models.DailyForecastResponse
 import com.siam.sky.data.models.HourlyForecastResponse
 import com.siam.sky.data.models.WeatherResponse
@@ -34,7 +35,8 @@ fun HomeScaffold(
     weatherState: ApiState<WeatherResponse>,
     hourlyState: ApiState<HourlyForecastResponse>,
     dailyState: ApiState<DailyForecastResponse>,
-    location: Location?
+    location: Location?,
+    unit: AppUnit
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState()
     val isAllContentReady = weatherState is ApiState.Success &&
@@ -83,7 +85,8 @@ fun HomeScaffold(
                         BottomSheetContent(
                             hourlyState = hourlyState,
                             dailyState = dailyState,
-                            weatherState = weatherState
+                            weatherState = weatherState,
+                            unit = unit
                         )
                     },
                     containerColor = Color.Transparent
@@ -94,7 +97,7 @@ fun HomeScaffold(
                             .safeDrawingPadding(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        WeatherHeroContent((weatherState as ApiState.Success).data)
+                        WeatherHeroContent((weatherState as ApiState.Success).data, unit)
                     }
                 }
             }

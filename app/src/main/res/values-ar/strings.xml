@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">sky</string>
+
+    <string name="fetching_location">جاري تحديد الموقع…</string>
+    <string name="loading_weather">جاري تحميل الطقس…</string>
+    <string name="error_prefix">خطأ: %1$s</string>
+
+    <string name="tab_hourly_forecast">توقعات بالساعة</string>
+    <string name="tab_weekly_forecast">توقعات أسبوعية</string>
+
+    <string name="hourly_unavailable">التوقعات بالساعة غير متاحة</string>
+    <string name="weekly_unavailable">التوقعات الأسبوعية غير متاحة</string>
+
+    <string name="label_now">الآن</string>
+
+    <string name="todays_details">تفاصيل اليوم</string>
+    <string name="label_humidity">الرطوبة</string>
+    <string name="label_wind">الرياح</string>
+    <string name="label_pressure">الضغط</string>
+    <string name="label_clouds">الغيوم</string>
+    <string name="label_sunrise">الشروق</string>
+    <string name="label_sunset">الغروب</string>
+
+    <string name="unit_ms">%1$s م/ث</string>
+    <string name="unit_hpa">%1$s هكتوباسكال</string>
+    <string name="unit_percent">%1$s%%</string>
+
+    <string name="unit_temp_c">°م</string>
+    <string name="unit_temp_f">°ف</string>
+    <string name="unit_temp_k"> ك</string>
+    <string name="unit_wind_mph">%1$s ميل/س</string>
+
+    <string name="high_low">أعلى:%1$d%3$s أدنى:%2$d%3$s</string>
+
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_alerts">تنبيهات</string>
+    <string name="nav_favourite">المفضلة</string>
+    <string name="nav_settings">الإعدادات</string>
+
+    <string name="settings_language_title">لغة التطبيق</string>
+
+    <string name="language_english">English</string>
+    <string name="language_english_subtitle">واجهة من اليسار إلى اليمين مع بيانات الطقس بالإنجليزية.</string>
+    <string name="language_arabic">العربية</string>
+    <string name="language_arabic_subtitle">واجهة من اليمين لليسار مع بيانات الطقس بالعربية.</string>
+    <string name="home_error_title">تعذر تحميل الطقس</string>
+
+    <string name="unit_standard">قياسي (ك، م/ث)</string>
+    <string name="unit_metric">متري (°م، م/ث)</string>
+    <string name="unit_imperial">إمبراطوري (°ف، ميل/س)</string>
+    <string name="settings_unit_title">نظام الوحدات</string>
+</resources>

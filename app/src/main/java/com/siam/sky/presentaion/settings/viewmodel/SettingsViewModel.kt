@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.siam.sky.core.helper.AppLanguage
+import com.siam.sky.core.helper.AppUnit
 import com.siam.sky.data.repo.UserRepo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,12 +16,19 @@ class SettingsViewModel(
 ) : ViewModel() {
 
     private val _selectedLanguage = MutableStateFlow(userRepo.getSavedAppLanguage())
+    private val  _selectedUnit = MutableStateFlow(userRepo.getSavedAppUnit())
     val selectedLanguage: StateFlow<AppLanguage> = _selectedLanguage.asStateFlow()
-
+     val  selectedUnit: StateFlow<AppUnit> = _selectedUnit.asStateFlow()
     init {
         viewModelScope.launch {
             userRepo.observeAppLanguage().collect { language ->
                 _selectedLanguage.value = language
+            }
+        }
+
+        viewModelScope.launch {
+            userRepo.observeUnit().collect { unit ->
+                _selectedUnit.value = unit
             }
         }
     }
@@ -32,6 +40,16 @@ class SettingsViewModel(
 
         userRepo.updateAppLanguage(language)
         _selectedLanguage.value = language
+        return true
+    }
+
+    fun selectUnit(unit: AppUnit): Boolean {
+        if (_selectedUnit.value == unit) {
+            return false
+        }
+
+        userRepo.updateAppUnit(unit)
+        _selectedUnit.value = unit
         return true
     }
 

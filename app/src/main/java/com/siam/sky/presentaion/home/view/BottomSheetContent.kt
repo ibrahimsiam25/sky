@@ -31,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.siam.sky.R
 import com.siam.sky.core.ApiState
+import com.siam.sky.core.helper.AppUnit
 import com.siam.sky.data.models.DailyForecastResponse
 import com.siam.sky.data.models.HourlyForecastResponse
 import com.siam.sky.data.models.WeatherResponse
@@ -39,7 +40,8 @@ import com.siam.sky.data.models.WeatherResponse
 fun BottomSheetContent(
     hourlyState: ApiState<HourlyForecastResponse>,
     dailyState: ApiState<DailyForecastResponse>,
-    weatherState: ApiState<WeatherResponse>
+    weatherState: ApiState<WeatherResponse>,
+    unit: AppUnit
 ) {
     var selectedTab by remember { mutableStateOf(0) }
 
@@ -94,13 +96,13 @@ fun BottomSheetContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         if (selectedTab == 0) {
-            HourlySection(hourlyState)
+            HourlySection(hourlyState, unit)
             Spacer(modifier = Modifier.height(24.dp))
             if (weatherState is ApiState.Success) {
-                DayDetailSection(weather = weatherState.data)
+                DayDetailSection(weather = weatherState.data, unit = unit)
             }
         } else {
-            WeeklySection(dailyState, weatherState)
+            WeeklySection(dailyState, weatherState, unit)
         }
     }
 }

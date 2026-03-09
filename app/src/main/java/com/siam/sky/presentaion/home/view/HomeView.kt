@@ -14,6 +14,7 @@ import com.siam.sky.data.repo.UserRepo
 import com.siam.sky.data.repo.WeatherRepo
 import com.siam.sky.presentaion.home.view.HomePermissionHandler
 import com.siam.sky.presentaion.home.viewmodel.HomeViewModel
+import com.siam.sky.core.helper.AppUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,6 +31,7 @@ fun HomeView() {
     val weatherState by viewModel.weatherState.collectAsState()
     val hourlyState by viewModel.hourlyState.collectAsState()
     val dailyState by viewModel.dailyState.collectAsState()
+    val unit by viewModel.unitState.collectAsState()
 
     permissionHandler.Bind()
 
@@ -37,7 +39,8 @@ fun HomeView() {
         weatherState = weatherState,
         hourlyState = hourlyState,
         dailyState = dailyState,
-        location = location
+        location = location,
+        unit = unit
     )
 }
 

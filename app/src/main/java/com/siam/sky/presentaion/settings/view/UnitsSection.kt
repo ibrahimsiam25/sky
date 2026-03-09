@@ -17,13 +17,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.siam.sky.R
-import com.siam.sky.core.helper.AppLanguage
+import com.siam.sky.core.helper.AppUnit
 
 @Composable
- fun SettingsLanguageSection(
-    selectedLanguage: AppLanguage,
-    onEnglishSelected: () -> Unit,
-    onArabicSelected: () -> Unit
+fun UnitsSection(
+    selectedUint: AppUnit,
+    onMetricSelected: () -> Unit,
+    onStandardSelected: () -> Unit,
+    onImperialSelected: () -> Unit
 ) {
     Column(
         modifier = Modifier.Companion
@@ -39,23 +40,30 @@ import com.siam.sky.core.helper.AppLanguage
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         Text(
-            text = stringResource(R.string.settings_language_title),
+            text = stringResource(R.string.settings_unit_title),
             color = Color.Companion.White,
             fontSize = 18.sp,
             fontWeight = FontWeight.Companion.SemiBold
         )
 
         SettingOptionCard(
-            title = stringResource(R.string.language_english),
-            isSelected = selectedLanguage == AppLanguage.ENGLISH,
-            onClick = onEnglishSelected
+            title = stringResource(R.string.unit_metric),
+            isSelected = selectedUint == AppUnit.METRIC,
+            onClick = onMetricSelected
         )
 
         SettingOptionCard(
-            title = stringResource(R.string.language_arabic),
-            isSelected = selectedLanguage == AppLanguage.ARABIC,
-            onClick = onArabicSelected
+            title = stringResource(R.string.unit_standard),
+            isSelected = selectedUint == AppUnit.STANDARD,
+            onClick = onStandardSelected
         )
+
+        SettingOptionCard(
+            title = stringResource(R.string.unit_imperial),
+            isSelected = selectedUint == AppUnit.IMPERIAL,
+            onClick = onImperialSelected
+        )
+
+
     }
 }
-

@@ -1,5 +1,8 @@
 package com.siam.sky.presentaion.home.view
-
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.style.BaselineShift
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +32,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.buildAnnotatedString
 import com.siam.sky.R
 import com.siam.sky.core.ApiState
 import com.siam.sky.core.helper.AppUnit
@@ -49,9 +53,6 @@ fun WeeklySection(
     weatherState: ApiState<WeatherResponse>,
     unit: AppUnit
 ) {
-    val cityName = if (weatherState is ApiState.Success)
-        "${weatherState.data.name}, ${weatherState.data.sys.country}" else ""
-
     when (state) {
         is ApiState.Loading -> Box(
             modifier = Modifier.fillMaxWidth().height(200.dp),
@@ -83,6 +84,7 @@ fun DailyForecastCard(item: DailyItem, unit: AppUnit) {
     val configuration = LocalConfiguration.current
     val locale = configuration.locales[0] ?: Locale.getDefault()
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+
     val dayName = remember(item.dt) {
         SimpleDateFormat("EEEE, MMM dd", locale).format(Date(item.dt * 1000L))
     }
@@ -99,7 +101,14 @@ fun DailyForecastCard(item: DailyItem, unit: AppUnit) {
             AppUnit.STANDARD -> R.string.unit_temp_k
         }
     )
-
+    val tempAnnotated = buildAnnotatedString {
+        withStyle(SpanStyle(fontSize = 50.sp, fontWeight = FontWeight.Bold, color = Color.White)) {
+            append("${item.temp.day.toInt()}")
+        }
+        withStyle(SpanStyle(fontSize = 20.sp, fontWeight = FontWeight.Light, color = Color.White.copy(alpha = 0.85f), baselineShift = BaselineShift(0.25f))) {
+            append(tempUnitStr)
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -130,11 +139,8 @@ fun DailyForecastCard(item: DailyItem, unit: AppUnit) {
             ) {
 
                 Text(
-                    text = "${item.temp.day.toInt()}$tempUnitStr",
-                    fontSize = 60.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 0.374.sp,
-                    color = Color.White,
+                    text = tempAnnotated,
+                    textAlign = TextAlign.Center,
                     lineHeight = 44.sp
                 )
                 Text(

@@ -49,4 +49,11 @@
     <string name="unit_metric">متري (°م، م/ث)</string>
     <string name="unit_imperial">إمبراطوري (°ف، ميل/س)</string>
     <string name="settings_unit_title">نظام الوحدات</string>
+    <string name="settings_location_title"> الموقع </string>
+    <string name="gps">تحديد تلقائي</string>
+    <string name="map">اختيار من الخريطة</string>
+    <string name="map_screen_title">اختيار الموقع</string>
+    <string name="btn_select_location">تحديد هذا الموقع</string>
+    <string name="btn_use_current_location">استخدام موقعي الحالي</string>
+    <string name="back">رجوع</string>
 </resources>

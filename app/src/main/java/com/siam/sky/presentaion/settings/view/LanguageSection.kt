@@ -20,7 +20,7 @@ import com.siam.sky.R
 import com.siam.sky.core.helper.AppLanguage
 
 @Composable
- fun SettingsLanguageSection(
+ fun LanguageSection(
     selectedLanguage: AppLanguage,
     onEnglishSelected: () -> Unit,
     onArabicSelected: () -> Unit

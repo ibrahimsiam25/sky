@@ -50,4 +50,11 @@
     <string name="unit_temp_f">°F</string>
     <string name="unit_temp_k"> K</string>
     <string name="unit_wind_mph">%1$s mi/h</string>
+    <string name="settings_location_title">Location</string>
+    <string name="gps">Current location</string>
+    <string name="map">Pick from map</string>
+    <string name="map_screen_title">Pick Location</string>
+    <string name="btn_select_location">Select This Location</string>
+    <string name="btn_use_current_location">Use Current Location</string>
+    <string name="back">Back</string>
 </resources>

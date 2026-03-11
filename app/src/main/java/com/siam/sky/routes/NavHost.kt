@@ -48,7 +48,14 @@ import com.siam.sky.R
 import com.siam.sky.presentaion.alerts.view.AlertsView
 import com.siam.sky.presentaion.favouirte.view.FavouriteView
 import com.siam.sky.presentaion.home.view.HomeView
+import com.siam.sky.presentaion.map.view.MapView
 import com.siam.sky.presentaion.settings.view.SettingsView
+import com.siam.sky.ui.theme.NavSurfaceTop
+import com.siam.sky.ui.theme.NavSurfaceBottom
+import com.siam.sky.ui.theme.NavStroke
+import com.siam.sky.ui.theme.NavLabelActive
+import com.siam.sky.ui.theme.WeekCardStart
+import com.siam.sky.ui.theme.HourCardSelected
 
 // ─── Data class for nav items ────────────────────────────────────────────────
 
@@ -102,7 +109,8 @@ fun App() {
             composable<Route.HomeView> { HomeView() }
             composable<Route.AlertsView> { AlertsView() }
             composable<Route.FavouriteView> { FavouriteView() }
-            composable<Route.SettingsView> { SettingsView() }
+            composable<Route.SettingsView> { SettingsView(onNavigateToMap = { controller.navigate(Route.MapView) }) }
+            composable<Route.MapView> { MapView(onNavigateBack = { controller.popBackStack() }) }
         }
     }
 }
@@ -124,8 +132,8 @@ private fun SkyBottomBar(controller: NavController) {
                     Brush.horizontalGradient(
                         colors = listOf(
                             Color.Transparent,
-                            Color(0xFF7B6ECF).copy(alpha = 0.35f),
-                            Color(0xFF7B6ECF).copy(alpha = 0.35f),
+                            NavStroke.copy(alpha = 0.35f),
+                            NavStroke.copy(alpha = 0.35f),
                             Color.Transparent,
                         )
                     )
@@ -137,8 +145,8 @@ private fun SkyBottomBar(controller: NavController) {
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
-                            Color(0xFF2E335A),
-                            Color(0xFF1C1B33),
+                            NavSurfaceTop,
+                            NavSurfaceBottom,
                         )
                     )
                 )
@@ -176,7 +184,7 @@ private fun SkyNavItem(
     onClick: () -> Unit,
 ) {
     val activeIconColor = Color.White
-    val activeLabelColor = Color(0xFFCDBEFF)
+    val activeLabelColor = NavLabelActive
     val inactiveColor = Color.White.copy(alpha = 0.40f)
 
     Column(
@@ -200,8 +208,8 @@ private fun SkyNavItem(
                             .background(
                                 Brush.verticalGradient(
                                     colors = listOf(
-                                        Color(0xFF5936B4).copy(alpha = 0.65f),
-                                        Color(0xFF48319D).copy(alpha = 0.45f),
+                                        WeekCardStart.copy(alpha = 0.65f),
+                                        HourCardSelected.copy(alpha = 0.45f),
                                     )
                                 ),
                                 RoundedCornerShape(22.dp),

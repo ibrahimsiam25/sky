@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.siam.sky.ui.theme.WhiteFaded
+import com.siam.sky.ui.theme.ErrorCardBg
 
 @Composable
 fun AppErrorView(
@@ -33,7 +34,7 @@ fun AppErrorView(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp)
-                .background(Color(0x40242A4A), RoundedCornerShape(28.dp))
+                .background(ErrorCardBg, RoundedCornerShape(28.dp))
                 .border(
                     width = 1.dp,
                     color = Color.White.copy(alpha = 0.14f),

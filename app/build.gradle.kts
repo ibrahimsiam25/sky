@@ -92,4 +92,11 @@ dependencies {
     implementation ("androidx.compose.runtime:runtime-livedata:$compose_version")
     implementation ("com.github.bumptech.glide:compose:1.0.0-beta01")
     implementation("com.google.android.gms:play-services-location:21.3.0")
+
+    // Google Maps SDK for Android
+    implementation(libs.places)
+    implementation(libs.play.services.maps)
+
+// Google maps Compose
+    implementation(libs.maps.compose)
 }

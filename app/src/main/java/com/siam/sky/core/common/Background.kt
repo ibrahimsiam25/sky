@@ -11,6 +11,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.siam.sky.R
+import com.siam.sky.ui.theme.BgOverlayTop
+import com.siam.sky.ui.theme.BgOverlayMid
+import com.siam.sky.ui.theme.BgOverlayBottom
 
 @Composable
  fun Background() {
@@ -27,9 +30,9 @@ import com.siam.sky.R
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
-                        Color(0x22141A33),
-                        Color(0x66141833),
-                        Color(0xAA120F24)
+                        BgOverlayTop,
+                        BgOverlayMid,
+                        BgOverlayBottom
                     )
                 )
             )

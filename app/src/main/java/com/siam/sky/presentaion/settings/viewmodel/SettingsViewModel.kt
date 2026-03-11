@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.siam.sky.core.helper.AppLanguage
+import com.siam.sky.core.helper.AppLoction
 import com.siam.sky.core.helper.AppUnit
 import com.siam.sky.data.repo.UserRepo
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,41 +17,42 @@ class SettingsViewModel(
 ) : ViewModel() {
 
     private val _selectedLanguage = MutableStateFlow(userRepo.getSavedAppLanguage())
-    private val  _selectedUnit = MutableStateFlow(userRepo.getSavedAppUnit())
+    private val _selectedUnit = MutableStateFlow(userRepo.getSavedAppUnit())
+    private val _selectedLocationMode = MutableStateFlow(userRepo.getSavedLocationMode())
+
     val selectedLanguage: StateFlow<AppLanguage> = _selectedLanguage.asStateFlow()
-     val  selectedUnit: StateFlow<AppUnit> = _selectedUnit.asStateFlow()
+    val selectedUnit: StateFlow<AppUnit> = _selectedUnit.asStateFlow()
+    val selectedLocationMode: StateFlow<AppLoction> = _selectedLocationMode.asStateFlow()
+
     init {
         viewModelScope.launch {
-            userRepo.observeAppLanguage().collect { language ->
-                _selectedLanguage.value = language
-            }
+            userRepo.observeAppLanguage().collect { _selectedLanguage.value = it }
         }
-
         viewModelScope.launch {
-            userRepo.observeUnit().collect { unit ->
-                _selectedUnit.value = unit
-            }
+            userRepo.observeUnit().collect { _selectedUnit.value = it }
+        }
+        viewModelScope.launch {
+            userRepo.observeLocationMode().collect { _selectedLocationMode.value = it }
         }
     }
 
     fun selectLanguage(language: AppLanguage): Boolean {
-        if (_selectedLanguage.value == language) {
-            return false
-        }
-
+        if (_selectedLanguage.value == language) return false
         userRepo.updateAppLanguage(language)
         _selectedLanguage.value = language
         return true
     }
 
     fun selectUnit(unit: AppUnit): Boolean {
-        if (_selectedUnit.value == unit) {
-            return false
-        }
-
+        if (_selectedUnit.value == unit) return false
         userRepo.updateAppUnit(unit)
         _selectedUnit.value = unit
         return true
+    }
+
+    fun selectLocationMode(mode: AppLoction) {
+        userRepo.saveLocationMode(mode)
+        _selectedLocationMode.value = mode
     }
 
     companion object {

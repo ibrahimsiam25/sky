@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.siam.sky.core.ApiState
 import com.siam.sky.core.helper.AppLanguage
+import com.siam.sky.core.helper.AppLoction
 import com.siam.sky.core.helper.AppUnit
 import com.siam.sky.data.models.DailyForecastResponse
 import com.siam.sky.data.models.HourlyForecastResponse
@@ -54,6 +55,8 @@ class HomeViewModel(
         observePermissionChanges()
         observeUnitChanges()
         observeLanguageChanges()
+        observeLocationModeChanges()
+        observeSavedLocationChanges()
     }
 
     fun setPermissionStatus(status: PermissionStatus) {
@@ -133,8 +136,41 @@ class HomeViewModel(
     private fun observePermissionChanges() {
         viewModelScope.launch {
             _permissionStatus.collect { status ->
-                if (status == PermissionStatus.GRANTED && _locationState.value == null) {
+                if (status == PermissionStatus.GRANTED && _locationState.value == null &&
+                    userRepo.getSavedLocationMode() == AppLoction.GPS
+                ) {
                     requestFreshLocation()
+                }
+            }
+        }
+    }
+
+    private fun observeLocationModeChanges() {
+        viewModelScope.launch {
+            userRepo.observeLocationMode().collect { mode ->
+                when (mode) {
+                    AppLoction.GPS -> {
+                        if (_permissionStatus.value == PermissionStatus.GRANTED) {
+                            requestFreshLocation()
+                        }
+                    }
+                    AppLoction.MAP -> {
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeSavedLocationChanges() {
+        viewModelScope.launch {
+            userRepo.observeLastKnownLocation().collect { (lat, lon) ->
+                if (userRepo.getSavedLocationMode() == AppLoction.MAP) {
+                    val loc = android.location.Location("map_pick").apply {
+                        latitude = lat.toDouble()
+                        longitude = lon.toDouble()
+                    }
+                    _locationState.value = loc
+                    fetchWeather(lat.toDouble(), lon.toDouble())
                 }
             }
         }

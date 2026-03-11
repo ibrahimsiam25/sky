@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import androidx.compose.foundation.layout.Arrangement
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -32,10 +33,11 @@ import com.siam.sky.data.datasources.local.UserLocalDataSource
 import com.siam.sky.data.repo.UserRepo
 import com.siam.sky.presentaion.settings.viewmodel.SettingsViewModel
 import com.siam.sky.core.common.Background
+import com.siam.sky.core.helper.AppLoction
 import com.siam.sky.core.helper.AppUnit
 
 @Composable
-fun SettingsView() {
+fun SettingsView(onNavigateToMap: () -> Unit) {
     val context = LocalContext.current
     val activity = context.findActivity()
     val viewModel: SettingsViewModel = viewModel(
@@ -43,6 +45,7 @@ fun SettingsView() {
     )
     val selectedLanguage by viewModel.selectedLanguage.collectAsState()
     val selectedUnit by viewModel.selectedUnit.collectAsState()
+    val selectedLocationMode by viewModel.selectedLocationMode.collectAsState()
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
@@ -52,6 +55,7 @@ fun SettingsView() {
             modifier = Modifier.Companion
                 .fillMaxSize()
                 .safeDrawingPadding()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 24.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
@@ -64,7 +68,7 @@ fun SettingsView() {
                 fontWeight = FontWeight.Companion.SemiBold
             )
 
-            SettingsLanguageSection(
+            LanguageSection(
                 selectedLanguage =  selectedLanguage,
                         onEnglishSelected = {
                     if (viewModel.selectLanguage(AppLanguage.ENGLISH)) {
@@ -77,6 +81,14 @@ fun SettingsView() {
                         AppLocaleManager.applyLanguage(context, AppLanguage.ARABIC)
                         activity?.recreate()
                     }
+                }
+            )
+            LocationSection(
+                selectedLocation = selectedLocationMode,
+                onGpsSelected = { viewModel.selectLocationMode(AppLoction.GPS) },
+                onMapSelected = {
+                    viewModel.selectLocationMode(AppLoction.MAP)
+                    onNavigateToMap()
                 }
             )
 

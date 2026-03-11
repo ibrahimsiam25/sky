@@ -8,6 +8,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.siam.sky.core.helper.AppLanguage
+import com.siam.sky.core.helper.AppLoction
 import com.siam.sky.core.helper.AppUnit
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -63,6 +64,37 @@ class UserLocalDataSource(private val context: Context) {
         }
 
     }
+    fun observeLastKnownLocation(): Flow<Pair<Float, Float>> = callbackFlow {
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == KEY_LAST_KNOWN_LOCATION_LAT || key == KEY_LAST_KNOWN_LOCATION_LON) {
+                trySend(getLastKnownLocation())
+            }
+        }
+
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
+
+        awaitClose {
+            sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener)
+        }
+    }
+    fun observeLocationMode(): Flow<AppLoction> = callbackFlow {
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == KEY_LOCATION_MODE) trySend(getSavedLocationMode())
+        }
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
+        awaitClose { sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener) }
+    }
+
+    fun saveLocationMode(mode: AppLoction) {
+        sharedPreferences.edit { putString(KEY_LOCATION_MODE, mode.loction) }
+    }
+
+    fun getSavedLocationMode(): AppLoction {
+        return AppLoction.fromLocation(
+            sharedPreferences.getString(KEY_LOCATION_MODE, AppLoction.GPS.loction)
+        )
+    }
+
     fun updateAppLanguage(language: AppLanguage) {
         sharedPreferences.edit {
             putString(KEY_APP_LANGUAGE, language.localeTag)
@@ -72,6 +104,12 @@ class UserLocalDataSource(private val context: Context) {
     fun updateUnit(unit: AppUnit) {
         sharedPreferences.edit {
             putString(KEY_UINT, unit.unit)
+        }
+    }
+    fun udateLastKnownLocation(lat: Float, lon: Float) {
+        sharedPreferences.edit {
+            putFloat(KEY_LAST_KNOWN_LOCATION_LAT, lat)
+            putFloat(KEY_LAST_KNOWN_LOCATION_LON, lon)
         }
     }
     fun getSavedAppLanguage(): AppLanguage {
@@ -87,10 +125,21 @@ class UserLocalDataSource(private val context: Context) {
 
     }
 
+    fun getLastKnownLocation(): Pair<Float, Float> {
+        val lat = sharedPreferences.getFloat(KEY_LAST_KNOWN_LOCATION_LAT, 30.05533f)
+        val lon = sharedPreferences.getFloat(KEY_LAST_KNOWN_LOCATION_LON, 31.2031467f)
+        return Pair(lat, lon)
+    }
+
+
     private companion object {
         const val PREFERENCES_NAME = "sky_preferences"
         const val KEY_APP_LANGUAGE = "app_language"
 
         const val KEY_UINT = "sky_key_unit"
+
+        const val KEY_LAST_KNOWN_LOCATION_LAT = "last_known_location_lat"
+        const val KEY_LAST_KNOWN_LOCATION_LON = "last_known_location_lon"
+        const val KEY_LOCATION_MODE = "location_mode"
     }
 }

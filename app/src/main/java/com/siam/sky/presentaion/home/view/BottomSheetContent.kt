@@ -32,6 +32,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.siam.sky.R
 import com.siam.sky.core.ApiState
 import com.siam.sky.core.helper.AppUnit
+import com.siam.sky.ui.theme.NavSurfaceTop
+import com.siam.sky.ui.theme.NavSurfaceBottom
 import com.siam.sky.data.models.DailyForecastResponse
 import com.siam.sky.data.models.HourlyForecastResponse
 import com.siam.sky.data.models.WeatherResponse
@@ -51,8 +53,8 @@ fun BottomSheetContent(
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFF2E335A).copy(alpha = 0.92f),
-                        Color(0xFF1C1B33).copy(alpha = 0.96f)
+                        NavSurfaceTop.copy(alpha = 0.92f),
+                        NavSurfaceBottom.copy(alpha = 0.96f)
                     )
                 ),
                 shape = RoundedCornerShape(topStart = 44.dp, topEnd = 44.dp)

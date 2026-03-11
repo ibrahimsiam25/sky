@@ -17,54 +17,43 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.siam.sky.R
-import com.siam.sky.core.helper.AppUnit
+import com.siam.sky.core.helper.AppLoction
 import com.siam.sky.ui.theme.SettingsSectionBg
 
 @Composable
-fun UnitsSection(
-    selectedUint: AppUnit,
-    onMetricSelected: () -> Unit,
-    onStandardSelected: () -> Unit,
-    onImperialSelected: () -> Unit
+fun LocationSection(
+    selectedLocation: AppLoction,
+    onGpsSelected: () -> Unit,
+    onMapSelected: () -> Unit
 ) {
     Column(
-        modifier = Modifier.Companion
+        modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(28.dp))
             .background(SettingsSectionBg)
             .border(
                 width = 1.dp,
-                color = Color.Companion.White.copy(alpha = 0.14f),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(28.dp)
+                color = Color.White.copy(alpha = 0.14f),
+                shape = RoundedCornerShape(28.dp)
             )
             .padding(horizontal = 16.dp, vertical = 18.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         Text(
-            text = stringResource(R.string.settings_unit_title),
-            color = Color.Companion.White,
+            text = stringResource(R.string.settings_location_title),
+            color = Color.White,
             fontSize = 18.sp,
-            fontWeight = FontWeight.Companion.SemiBold
+            fontWeight = FontWeight.SemiBold
         )
-
         SettingOptionCard(
-            title = stringResource(R.string.unit_metric),
-            isSelected = selectedUint == AppUnit.METRIC,
-            onClick = onMetricSelected
+            title = stringResource(R.string.gps),
+            isSelected = selectedLocation == AppLoction.GPS,
+            onClick = onGpsSelected
         )
-
         SettingOptionCard(
-            title = stringResource(R.string.unit_standard),
-            isSelected = selectedUint == AppUnit.STANDARD,
-            onClick = onStandardSelected
+            title = stringResource(R.string.map),
+            isSelected = selectedLocation == AppLoction.MAP,
+            onClick = onMapSelected
         )
-
-        SettingOptionCard(
-            title = stringResource(R.string.unit_imperial),
-            isSelected = selectedUint == AppUnit.IMPERIAL,
-            onClick = onImperialSelected
-        )
-
-
     }
 }

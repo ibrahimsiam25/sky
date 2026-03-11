@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import com.siam.sky.ui.theme.OptionSelectedBg
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,7 +35,7 @@ import androidx.compose.ui.unit.sp
             .fillMaxWidth()
             .clip(RoundedCornerShape(24.dp))
             .background(
-                if (isSelected) Color(0x665936B4) else Color.Companion.White.copy(alpha = 0.06f)
+                if (isSelected) OptionSelectedBg else Color.White.copy(alpha = 0.06f)
             )
             .border(
                 width = 1.dp,

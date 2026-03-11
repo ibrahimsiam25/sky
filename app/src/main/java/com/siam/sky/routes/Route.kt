@@ -17,4 +17,6 @@ sealed class Route {
     @Serializable
     object SettingsView : Route()
 
+    @Serializable
+    object MapView : Route()
 }

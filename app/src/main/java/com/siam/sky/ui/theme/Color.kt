@@ -21,3 +21,21 @@ val RainBlue = Color(0xFF40CBD8)
 val SheetStroke = Color(0xFF6D5ACF).copy(alpha = 0.45f)
 val HourBorderSel = Color.White.copy(alpha = 0.50f)
 val HourBorderReg = Color.White.copy(alpha = 0.20f)
+
+// ─── Navigation bar ───────────────────────────────────────────────────────────
+val NavSurfaceTop    = Color(0xFF2E335A)
+val NavSurfaceBottom = Color(0xFF1C1B33)
+val NavStroke        = Color(0xFF7B6ECF)
+val NavLabelActive   = Color(0xFFCDBEFF)
+
+// ─── Misc UI ──────────────────────────────────────────────────────────────────
+val ErrorCardBg      = Color(0x40242A4A)
+
+// ─── Settings ─────────────────────────────────────────────────────────────────
+val SettingsSectionBg = Color(0x3D1F2448)
+val OptionSelectedBg  = Color(0x665936B4)
+
+// ─── Background overlays ──────────────────────────────────────────────────────
+val BgOverlayTop     = Color(0x22141A33)
+val BgOverlayMid     = Color(0x66141833)
+val BgOverlayBottom  = Color(0xAA120F24)

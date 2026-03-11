@@ -9,11 +9,15 @@ import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import com.siam.sky.core.helper.LocationHelper
 import com.siam.sky.presentaion.home.viewmodel.HomeViewModel
@@ -78,16 +82,18 @@ class HomePermissionHandler(
             )
         }
 
+        val showDialog by viewModel.showPermissionDialog.collectAsState()
+
         LaunchedEffect(permissionStatus) {
             when (permissionStatus) {
-                PermissionStatus.GRANTED -> Unit
+                PermissionStatus.GRANTED -> {
+                    // If permission granted, ensure dialog is closed
+                    viewModel.hidePermissionDialog()
+                }
 
                 PermissionStatus.PERMANENTLY_DENIED -> {
-                    appSettingsLauncher.launch(
-                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                            data = Uri.fromParts("package", context.packageName, null)
-                        }
-                    )
+                    // Show dialog via ViewModel (MVVM) instead of opening settings immediately
+                    viewModel.showPermissionDialog()
                 }
 
                 PermissionStatus.DENIED -> {
@@ -96,6 +102,27 @@ class HomePermissionHandler(
 
                 PermissionStatus.UNKNOWN -> Unit
             }
+        }
+
+        if (showDialog) {
+            // Non-dismissible dialog: no dismiss button, onDismissRequest is empty
+            AlertDialog(
+                onDismissRequest = {},
+                title = { Text(text = stringResource(id = com.siam.sky.R.string.permission_denied_title)) },
+                text = { Text(text = stringResource(id = com.siam.sky.R.string.permission_denied_message)) },
+                confirmButton = {
+                    Button(onClick = {
+                        // Keep dialog open until permission status actually updates; open settings
+                        appSettingsLauncher.launch(
+                            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                data = Uri.fromParts("package", context.packageName, null)
+                            }
+                        )
+                    }) {
+                        Text(text = stringResource(id = com.siam.sky.R.string.permission_denied_go_to_settings))
+                    }
+                }
+            )
         }
     }
 

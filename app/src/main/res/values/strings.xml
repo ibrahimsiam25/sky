@@ -57,4 +57,9 @@
     <string name="btn_select_location">Select This Location</string>
     <string name="btn_use_current_location">Use Current Location</string>
     <string name="back">Back</string>
+    <string name="permission_denied_title">Location permission required</string>
+    <string name="permission_denied_message">This app needs location permission to show weather for
+        your area. Please grant location permission from app settings.</string>
+    <string name="permission_denied_go_to_settings">Go to Settings</string>
+    <string name="permission_denied_cancel">Cancel</string>
 </resources>

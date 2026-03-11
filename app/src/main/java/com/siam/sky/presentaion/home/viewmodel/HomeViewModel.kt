@@ -53,6 +53,9 @@ class HomeViewModel(
     private val _unitState = MutableStateFlow(userRepo.getSavedAppUnit())
     val unitState: StateFlow<AppUnit> = _unitState.asStateFlow()
 
+    private val _showPermissionDialog = MutableStateFlow(false)
+    val showPermissionDialog: StateFlow<Boolean> = _showPermissionDialog.asStateFlow()
+
     init {
         observePermissionChanges()
         observeUnitChanges()
@@ -63,6 +66,14 @@ class HomeViewModel(
 
     fun setPermissionStatus(status: PermissionStatus) {
         _permissionStatus.value = status
+    }
+
+    fun showPermissionDialog() {
+        _showPermissionDialog.value = true
+    }
+
+    fun hidePermissionDialog() {
+        _showPermissionDialog.value = false
     }
 
     private fun requestFreshLocation() {

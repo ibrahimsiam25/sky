@@ -33,7 +33,7 @@ import com.siam.sky.data.datasources.local.UserLocalDataSource
 import com.siam.sky.data.repo.UserRepo
 import com.siam.sky.presentaion.settings.viewmodel.SettingsViewModel
 import com.siam.sky.core.common.Background
-import com.siam.sky.core.helper.AppLoction
+import com.siam.sky.core.helper.AppLoctionMode
 import com.siam.sky.core.helper.AppUnit
 
 @Composable
@@ -85,9 +85,9 @@ fun SettingsView(onNavigateToMap: () -> Unit) {
             )
             LocationSection(
                 selectedLocation = selectedLocationMode,
-                onGpsSelected = { viewModel.selectLocationMode(AppLoction.GPS) },
+                onGpsSelected = { viewModel.selectLocationMode(AppLoctionMode.GPS) },
                 onMapSelected = {
-                    viewModel.selectLocationMode(AppLoction.MAP)
+                    viewModel.selectLocationMode(AppLoctionMode.MAP)
                     onNavigateToMap()
                 }
             )

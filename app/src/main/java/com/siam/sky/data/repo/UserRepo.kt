@@ -2,7 +2,7 @@ package com.siam.sky.data.repo
 
 import android.location.Location
 import com.siam.sky.core.helper.AppLanguage
-import com.siam.sky.core.helper.AppLoction
+import com.siam.sky.core.helper.AppLoctionMode
 import com.siam.sky.core.helper.AppUnit
 import com.siam.sky.data.datasources.local.UserLocalDataSource
 import kotlinx.coroutines.flow.Flow
@@ -46,10 +46,10 @@ class UserRepo(private val userLocalDataSource: UserLocalDataSource) {
     }
 
      fun updateLocationSource(lat: Float, lon: Float) {
-        userLocalDataSource.udateLastKnownLocation(lat, lon)
+        userLocalDataSource.updateLastKnownLocation(lat, lon)
     }
 
-    fun getSavedLocationMode(): AppLoction = userLocalDataSource.getSavedLocationMode()
-    fun saveLocationMode(mode: AppLoction) = userLocalDataSource.saveLocationMode(mode)
-    fun observeLocationMode(): Flow<AppLoction> = userLocalDataSource.observeLocationMode()
+    fun getSavedLocationMode(): AppLoctionMode = userLocalDataSource.getSavedLocationMode()
+    fun saveLocationMode(mode: AppLoctionMode) = userLocalDataSource.saveLocationMode(mode)
+    fun observeLocationMode(): Flow<AppLoctionMode> = userLocalDataSource.observeLocationMode()
 }

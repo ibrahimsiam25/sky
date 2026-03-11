@@ -8,7 +8,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.siam.sky.core.helper.AppLanguage
-import com.siam.sky.core.helper.AppLoction
+import com.siam.sky.core.helper.AppLoctionMode
 import com.siam.sky.core.helper.AppUnit
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -77,7 +77,7 @@ class UserLocalDataSource(private val context: Context) {
             sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener)
         }
     }
-    fun observeLocationMode(): Flow<AppLoction> = callbackFlow {
+    fun observeLocationMode(): Flow<AppLoctionMode> = callbackFlow {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
             if (key == KEY_LOCATION_MODE) trySend(getSavedLocationMode())
         }
@@ -85,13 +85,13 @@ class UserLocalDataSource(private val context: Context) {
         awaitClose { sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener) }
     }
 
-    fun saveLocationMode(mode: AppLoction) {
+    fun saveLocationMode(mode: AppLoctionMode) {
         sharedPreferences.edit { putString(KEY_LOCATION_MODE, mode.loction) }
     }
 
-    fun getSavedLocationMode(): AppLoction {
-        return AppLoction.fromLocation(
-            sharedPreferences.getString(KEY_LOCATION_MODE, AppLoction.GPS.loction)
+    fun getSavedLocationMode(): AppLoctionMode {
+        return AppLoctionMode.fromLocation(
+            sharedPreferences.getString(KEY_LOCATION_MODE, AppLoctionMode.GPS.loction)
         )
     }
 
@@ -106,7 +106,7 @@ class UserLocalDataSource(private val context: Context) {
             putString(KEY_UINT, unit.unit)
         }
     }
-    fun udateLastKnownLocation(lat: Float, lon: Float) {
+    fun updateLastKnownLocation(lat: Float, lon: Float) {
         sharedPreferences.edit {
             putFloat(KEY_LAST_KNOWN_LOCATION_LAT, lat)
             putFloat(KEY_LAST_KNOWN_LOCATION_LON, lon)

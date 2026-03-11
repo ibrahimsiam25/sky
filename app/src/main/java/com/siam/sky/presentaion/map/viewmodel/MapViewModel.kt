@@ -3,7 +3,7 @@ package com.siam.sky.presentaion.map.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.siam.sky.core.helper.AppLoction
+import com.siam.sky.core.helper.AppLoctionMode
 import com.siam.sky.data.repo.UserRepo
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,7 +54,7 @@ class MapViewModel(private val userRepo: UserRepo) : ViewModel() {
     fun confirmSelection(onDone: () -> Unit) {
         val (lat, lon) = _pickedLocation.value
         userRepo.updateLocationSource(lat.toFloat(), lon.toFloat())
-        userRepo.saveLocationMode(AppLoction.MAP)
+        userRepo.saveLocationMode(AppLoctionMode.MAP)
         onDone()
     }
 

@@ -1,12 +1,13 @@
 package com.siam.sky.presentaion.home.viewmodel
 
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.siam.sky.core.ApiState
 import com.siam.sky.core.helper.AppLanguage
-import com.siam.sky.core.helper.AppLoction
+import com.siam.sky.core.helper.AppLoctionMode
 import com.siam.sky.core.helper.AppUnit
 import com.siam.sky.data.models.DailyForecastResponse
 import com.siam.sky.data.models.HourlyForecastResponse
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 enum class PermissionStatus { UNKNOWN, GRANTED, DENIED, PERMANENTLY_DENIED }
 
@@ -68,6 +70,8 @@ class HomeViewModel(
         locationJob = viewModelScope.launch {
             userRepo.getFreshLocation().collect { location ->
                 _locationState.value = location
+                userRepo.updateLocationSource( location.latitude.toFloat(), location.longitude.toFloat())
+               
                 fetchWeather(location.latitude, location.longitude)
             }
         }
@@ -136,10 +140,16 @@ class HomeViewModel(
     private fun observePermissionChanges() {
         viewModelScope.launch {
             _permissionStatus.collect { status ->
-                if (status == PermissionStatus.GRANTED && _locationState.value == null &&
-                    userRepo.getSavedLocationMode() == AppLoction.GPS
+                if (status == PermissionStatus.GRANTED &&
+                    userRepo.getSavedLocationMode() == AppLoctionMode.GPS
                 ) {
-                    requestFreshLocation()
+                    val saved = userRepo.getSavedLocationSource()
+                    if (saved.first != 0f && saved.second != 0f) {
+                        fetchWeather(saved.first.toDouble(), saved.second.toDouble())
+                    } else {
+
+                        requestFreshLocation()
+                    }
                 }
             }
         }
@@ -149,12 +159,13 @@ class HomeViewModel(
         viewModelScope.launch {
             userRepo.observeLocationMode().collect { mode ->
                 when (mode) {
-                    AppLoction.GPS -> {
+                    AppLoctionMode.GPS -> {
                         if (_permissionStatus.value == PermissionStatus.GRANTED) {
+
                             requestFreshLocation()
                         }
                     }
-                    AppLoction.MAP -> {
+                    AppLoctionMode.MAP -> {
                     }
                 }
             }
@@ -164,12 +175,13 @@ class HomeViewModel(
     private fun observeSavedLocationChanges() {
         viewModelScope.launch {
             userRepo.observeLastKnownLocation().collect { (lat, lon) ->
-                if (userRepo.getSavedLocationMode() == AppLoction.MAP) {
-                    val loc = android.location.Location("map_pick").apply {
+                if (userRepo.getSavedLocationMode() == AppLoctionMode.MAP) {
+                    val loc = Location("map_pick").apply {
                         latitude = lat.toDouble()
                         longitude = lon.toDouble()
                     }
                     _locationState.value = loc
+
                     fetchWeather(lat.toDouble(), lon.toDouble())
                 }
             }

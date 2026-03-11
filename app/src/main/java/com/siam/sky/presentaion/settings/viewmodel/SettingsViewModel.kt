@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.siam.sky.core.helper.AppLanguage
-import com.siam.sky.core.helper.AppLoction
+import com.siam.sky.core.helper.AppLoctionMode
 import com.siam.sky.core.helper.AppUnit
 import com.siam.sky.data.repo.UserRepo
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +22,7 @@ class SettingsViewModel(
 
     val selectedLanguage: StateFlow<AppLanguage> = _selectedLanguage.asStateFlow()
     val selectedUnit: StateFlow<AppUnit> = _selectedUnit.asStateFlow()
-    val selectedLocationMode: StateFlow<AppLoction> = _selectedLocationMode.asStateFlow()
+    val selectedLocationMode: StateFlow<AppLoctionMode> = _selectedLocationMode.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -50,7 +50,7 @@ class SettingsViewModel(
         return true
     }
 
-    fun selectLocationMode(mode: AppLoction) {
+    fun selectLocationMode(mode: AppLoctionMode) {
         userRepo.saveLocationMode(mode)
         _selectedLocationMode.value = mode
     }

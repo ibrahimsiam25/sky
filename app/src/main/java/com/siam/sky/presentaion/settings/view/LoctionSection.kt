@@ -17,12 +17,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.siam.sky.R
-import com.siam.sky.core.helper.AppLoction
+import com.siam.sky.core.helper.AppLoctionMode
 import com.siam.sky.ui.theme.SettingsSectionBg
 
 @Composable
 fun LocationSection(
-    selectedLocation: AppLoction,
+    selectedLocation: AppLoctionMode,
     onGpsSelected: () -> Unit,
     onMapSelected: () -> Unit
 ) {
@@ -47,12 +47,12 @@ fun LocationSection(
         )
         SettingOptionCard(
             title = stringResource(R.string.gps),
-            isSelected = selectedLocation == AppLoction.GPS,
+            isSelected = selectedLocation == AppLoctionMode.GPS,
             onClick = onGpsSelected
         )
         SettingOptionCard(
             title = stringResource(R.string.map),
-            isSelected = selectedLocation == AppLoction.MAP,
+            isSelected = selectedLocation == AppLoctionMode.MAP,
             onClick = onMapSelected
         )
     }

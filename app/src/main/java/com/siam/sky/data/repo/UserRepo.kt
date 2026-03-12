@@ -5,6 +5,7 @@ import com.siam.sky.core.helper.AppLanguage
 import com.siam.sky.core.helper.AppLoctionMode
 import com.siam.sky.core.helper.AppUnit
 import com.siam.sky.data.datasources.local.UserLocalDataSource
+import com.siam.sky.data.models.AlertModel
 import kotlinx.coroutines.flow.Flow
 
 class UserRepo(private val userLocalDataSource: UserLocalDataSource) {
@@ -52,4 +53,29 @@ class UserRepo(private val userLocalDataSource: UserLocalDataSource) {
     fun getSavedLocationMode(): AppLoctionMode = userLocalDataSource.getSavedLocationMode()
     fun saveLocationMode(mode: AppLoctionMode) = userLocalDataSource.saveLocationMode(mode)
     fun observeLocationMode(): Flow<AppLoctionMode> = userLocalDataSource.observeLocationMode()
+
+    // Alerts
+    fun scheduleAlert(alert: AlertModel) {
+        userLocalDataSource.scheduleAlert(alert)
+    }
+
+    fun cancelAlert(alert: AlertModel) {
+        userLocalDataSource.cancelAlert(alert)
+    }
+
+    suspend fun insertAlert(alert: AlertModel) {
+        userLocalDataSource.insertAlert(alert)
+    }
+
+    suspend fun deleteAlert(alert: AlertModel) {
+        userLocalDataSource.deleteAlert(alert)
+    }
+
+    suspend fun updateAlert(alert: AlertModel) {
+        userLocalDataSource.updateAlert(alert)
+    }
+
+    fun getAllAlerts(): Flow<List<AlertModel>> {
+        return userLocalDataSource.getAllAlerts()
+    }
 }

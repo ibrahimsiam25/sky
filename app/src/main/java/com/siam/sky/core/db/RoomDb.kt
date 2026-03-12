@@ -5,12 +5,17 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.siam.sky.data.datasources.local.AlertDao
 import com.siam.sky.data.datasources.local.WeatherDao
+import com.siam.sky.data.models.AlertModel
 import com.siam.sky.data.models.WeatherEntity
 
-@Database(entities = [WeatherEntity::class], version = 1, exportSchema = false)
+@Database(entities = [WeatherEntity::class, AlertModel::class], version = 3, exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class WeatherDataBase : RoomDatabase() {
     abstract fun getWeatherDao(): WeatherDao
+    abstract fun getAlertDao(): AlertDao
 
     companion object {
         @Volatile
@@ -20,6 +25,7 @@ abstract class WeatherDataBase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     ctx.applicationContext, WeatherDataBase::class.java, "WeatherDataBase"
                 )
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance

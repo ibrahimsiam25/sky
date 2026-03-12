@@ -14,8 +14,19 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import androidx.core.content.edit
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
+import com.siam.sky.data.models.AlertModel
+import com.siam.sky.data.models.AlertType
+import com.siam.sky.data.services.StopAlertWorker
+import com.siam.sky.data.services.WeatherAlertWorker
+import java.util.concurrent.TimeUnit
 
-class UserLocalDataSource(private val context: Context) {
+class UserLocalDataSource(
+    private val context: Context,
+    private val alertDao: AlertDao? = null
+) {
 
     private val fusedLocationClient =
         LocationServices.getFusedLocationProviderClient(context)
@@ -131,7 +142,46 @@ class UserLocalDataSource(private val context: Context) {
         return Pair(lat, lon)
     }
 
+    fun scheduleAlert(alert: AlertModel) {
+        val currentTime = System.currentTimeMillis()
+        val startDelay = (alert.startTime - currentTime).coerceAtLeast(0L)
+        val endDelay = (alert.endTime - currentTime).coerceAtLeast(0L)
+        val tag = "alert_${alert.id}"
 
+        val startWork = OneTimeWorkRequestBuilder<WeatherAlertWorker>()
+            .setInitialDelay(startDelay, TimeUnit.MILLISECONDS)
+            .setInputData(workDataOf("ALERT_TYPE" to alert.type.name, "ALERT_ID" to alert.id))
+            .addTag(tag)
+            .build()
+
+        val stopWork = OneTimeWorkRequestBuilder<StopAlertWorker>()
+            .setInitialDelay(endDelay, TimeUnit.MILLISECONDS)
+            .setInputData(workDataOf("ALERT_ID" to alert.id))
+            .addTag(tag)
+            .build()
+
+        WorkManager.getInstance(context).enqueue(listOf(startWork, stopWork))
+    }
+
+    fun cancelAlert(alert: AlertModel) {
+        WorkManager.getInstance(context).cancelAllWorkByTag("alert_${alert.id}")
+    }
+
+    suspend fun insertAlert(alert: AlertModel) {
+        alertDao?.insertAlert(alert)
+    }
+
+    suspend fun deleteAlert(alert: AlertModel) {
+        alertDao?.deleteAlert(alert)
+    }
+
+    suspend fun updateAlert(alert: AlertModel) {
+        alertDao?.updateAlert(alert)
+    }
+
+    fun getAllAlerts(): Flow<List<AlertModel>> {
+        return alertDao?.getAllAlerts() ?: kotlinx.coroutines.flow.flowOf(emptyList())
+    }
     private companion object {
         const val PREFERENCES_NAME = "sky_preferences"
         const val KEY_APP_LANGUAGE = "app_language"

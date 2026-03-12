@@ -61,4 +61,22 @@
         الرجاء منح إذن الموقع من إعدادات التطبيق.</string>
     <string name="permission_denied_go_to_settings">الذهاب للإعدادات</string>
     <string name="permission_denied_cancel">إلغاء</string>
+
+    <string name="add_alert">إضافة تنبيه</string>
+    <string name="add_new_alert">إضافة تنبيه جديد</string>
+    <string name="alert_type">النوع: </string>
+    <string name="type_notification">إشعار</string>
+    <string name="type_alarm">منبه</string>
+    <string name="start_time_label">البداية: %1$s</string>
+    <string name="end_time_label">النهاية: %1$s</string>
+    <string name="select_start_time">اختار وقت البداية</string>
+    <string name="select_end_time">اختار وقت النهاية</string>
+    <string name="save">حفظ</string>
+    <string name="cancel">إلغاء</string>
+    <string name="error_past_time">لا يمكن اختيار وقت في الماضي</string>
+    <string name="error_end_before_start">وقت النهاية يجب أن يكون بعد البداية</string>
+    <string name="permission_notification_required">إذن الإشعارات مطلوب لضبط التنبيهات.</string>
+    <string name="permission_notification_title">مطلوب إذن الإشعارات</string>
+    <string name="permission_retry">السماح</string>
+    <string name="select_end_time_hint">اختار وقت النهاية (بعد البداية)</string>
 </resources>

@@ -1,6 +1,6 @@
-package com.siam.sky.presentaion.map.view
+package com.siam.sky.presentaion.settings.view
 
-import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -52,7 +52,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.siam.sky.R
 import com.siam.sky.data.datasources.local.UserLocalDataSource
 import com.siam.sky.data.repo.UserRepo
-import com.siam.sky.presentaion.map.viewmodel.MapViewModel
+import com.siam.sky.presentaion.settings.viewmodel.MapViewModel
 import com.siam.sky.ui.theme.HourCardSelected
 import com.siam.sky.ui.theme.NavSurfaceBottom
 import com.siam.sky.ui.theme.NavSurfaceTop
@@ -177,7 +177,7 @@ fun MapView(onNavigateBack: () -> Unit) {
                 enabled = !isLoading,
                 modifier = Modifier.fillMaxWidth().height(52.dp),
                 shape = RoundedCornerShape(16.dp),
-                border = androidx.compose.foundation.BorderStroke(
+                border = BorderStroke(
                     1.dp, Color.White.copy(alpha = 0.35f)
                 ),
                 colors = ButtonDefaults.outlinedButtonColors(

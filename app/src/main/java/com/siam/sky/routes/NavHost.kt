@@ -15,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.siam.sky.presentaion.alerts.view.AlertsView
 import com.siam.sky.presentaion.favouirte.view.FavouriteView
 import com.siam.sky.presentaion.home.view.HomeView
-import com.siam.sky.presentaion.map.view.MapView
+import com.siam.sky.presentaion.settings.view.MapView
 import com.siam.sky.presentaion.settings.view.SettingsView
 
 

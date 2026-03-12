@@ -1,4 +1,4 @@
-package com.siam.sky.presentaion.map.viewmodel
+package com.siam.sky.presentaion.settings.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

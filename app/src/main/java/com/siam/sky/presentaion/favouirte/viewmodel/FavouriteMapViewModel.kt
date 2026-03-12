@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.siam.sky.core.ResponseState
 import com.siam.sky.data.models.CityModel
 import com.siam.sky.data.models.CityResponse
+import com.siam.sky.data.models.FavouriteLocationEntity
+import com.siam.sky.data.repo.FavouriteRepo
 import com.siam.sky.data.repo.WeatherRepo
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +16,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class FavouriteMapViewModel(
-    private val weatherRepo: WeatherRepo
+    private val weatherRepo: WeatherRepo,
+    private val favouriteRepo: FavouriteRepo
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
@@ -59,11 +62,51 @@ class FavouriteMapViewModel(
         _pickedLocation.value = Pair(lat, lon)
     }
 
+    fun confirmSelection(onDone: () -> Unit) {
+        val (lat, lon) = _pickedLocation.value
+        viewModelScope.launch {
+            val regionName = resolveRegionName(lat, lon)
+            favouriteRepo.insertFavourite(
+                FavouriteLocationEntity(
+                    name = regionName,
+                    lat = lat,
+                    lon = lon
+                )
+            )
+            onDone()
+        }
+    }
+
+    private suspend fun resolveRegionName(lat: Double, lon: Double): String {
+        val searchName = _searchQuery.value.trim()
+        val fallback = if (searchName.isNotBlank()) searchName else ""
+        var resolvedName = fallback
+
+        weatherRepo.reverseGeocode(lat, lon).collect { state ->
+            when (state) {
+                is ResponseState.Success -> {
+                    val city = state.data.firstOrNull()
+                    resolvedName = if (city != null) {
+                        if (city.country.isNotBlank()) "${city.name}, ${city.country}" else city.name
+                    } else {
+                        fallback
+                    }
+                }
+                is ResponseState.Error -> {
+                    resolvedName = fallback
+                }
+                else -> Unit
+            }
+        }
+
+        return resolvedName
+    }
+
     companion object {
-        fun factory(weatherRepo: WeatherRepo) = object : ViewModelProvider.Factory {
+        fun factory(weatherRepo: WeatherRepo, favouriteRepo: FavouriteRepo) = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return FavouriteMapViewModel(weatherRepo) as T
+                return FavouriteMapViewModel(weatherRepo, favouriteRepo) as T
             }
         }
     }

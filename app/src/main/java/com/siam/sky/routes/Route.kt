@@ -22,4 +22,7 @@ sealed class Route {
 
     @Serializable
     object FavouriteMapView : Route()
+
+    @Serializable
+    data class FavouriteWeatherView(val lat: Double, val lon: Double) : Route()
 }

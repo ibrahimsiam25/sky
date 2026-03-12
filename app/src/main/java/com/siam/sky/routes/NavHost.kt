@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.toRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -15,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.siam.sky.presentaion.alerts.view.AlertsView
 import com.siam.sky.presentaion.favouirte.view.FavouriteMapView
 import com.siam.sky.presentaion.favouirte.view.FavouriteView
+import com.siam.sky.presentaion.favouirte.view.FavouriteWeatherView
 import com.siam.sky.presentaion.home.view.HomeView
 import com.siam.sky.presentaion.settings.view.MapView
 import com.siam.sky.presentaion.settings.view.SettingsView
@@ -47,11 +49,24 @@ fun App() {
             composable<Route.HomeView> { HomeView() }
             composable<Route.AlertsView> { AlertsView() }
             composable<Route.FavouriteView> {
-                FavouriteView(onNavigateToMap = { controller.navigate(Route.FavouriteMapView) })
+                FavouriteView(
+                    onNavigateToMap = { controller.navigate(Route.FavouriteMapView) },
+                    onNavigateToDetails = { lat, lon ->
+                        controller.navigate(Route.FavouriteWeatherView(lat, lon))
+                    }
+                )
             }
             composable<Route.SettingsView> { SettingsView(onNavigateToMap = { controller.navigate(Route.MapView) }) }
             composable<Route.MapView> { MapView(onNavigateBack = { controller.popBackStack() }) }
             composable<Route.FavouriteMapView> { FavouriteMapView(onNavigateBack = { controller.popBackStack() }) }
+            composable<Route.FavouriteWeatherView> { backStackEntry ->
+                val route = backStackEntry.toRoute<Route.FavouriteWeatherView>()
+                FavouriteWeatherView(
+                    lat = route.lat,
+                    lon = route.lon,
+                    onNavigateBack = { controller.popBackStack() }
+                )
+            }
         }
     }
 }

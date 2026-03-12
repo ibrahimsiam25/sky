@@ -47,4 +47,13 @@ class WeatherRemoteDataSource {
             emit(ResponseState.Error(e.message ?: "Unknown error"))
         }
     }
+
+    fun reverseGeocode(lat: Double, lon: Double): Flow<ResponseState<CityResponse>> = flow {
+        try {
+            val response = weatherService.reverseGeocode(lat = lat, lon = lon)
+            emit(ResponseState.Success(response))
+        } catch (e: Exception) {
+            emit(ResponseState.Error(e.message ?: "Unknown error"))
+        }
+    }
 }

@@ -86,4 +86,10 @@
     <string name="fav_search_hint">Search city…</string>
     <string name="fav_search_no_results">No cities found</string>
     <string name="fav_btn_confirm">Add to Favourites</string>
+    <string name="favourite_empty">No favourite locations yet</string>
+    <string name="favourite_delete_title">Delete favourite</string>
+    <string name="favourite_delete_message">Are you sure you want to remove this location?</string>
+    <string name="favourite_region_label">Region</string>
+    <string name="favourite_unknown_region">Unknown region</string>
+    <string name="delete">Delete</string>
 </resources>

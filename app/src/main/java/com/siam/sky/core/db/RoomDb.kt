@@ -7,15 +7,22 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.siam.sky.data.datasources.local.AlertDao
+import com.siam.sky.data.datasources.local.FavouriteLocationDao
 import com.siam.sky.data.datasources.local.WeatherDao
 import com.siam.sky.data.models.AlertModel
+import com.siam.sky.data.models.FavouriteLocationEntity
 import com.siam.sky.data.models.WeatherEntity
 
-@Database(entities = [WeatherEntity::class, AlertModel::class], version = 3, exportSchema = false)
+@Database(
+    entities = [WeatherEntity::class, AlertModel::class, FavouriteLocationEntity::class],
+    version = 4,
+    exportSchema = false
+)
 @TypeConverters(Converters::class)
 abstract class WeatherDataBase : RoomDatabase() {
     abstract fun getWeatherDao(): WeatherDao
     abstract fun getAlertDao(): AlertDao
+    abstract fun getFavouriteLocationDao(): FavouriteLocationDao
 
     companion object {
         @Volatile

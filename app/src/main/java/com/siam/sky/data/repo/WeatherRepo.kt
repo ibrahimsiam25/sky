@@ -21,4 +21,7 @@ class WeatherRepo(private val weatherRemoteDataSource: WeatherRemoteDataSource) 
 
     fun  searchCity(query: String ): Flow<ResponseState<CityResponse>> =
         weatherRemoteDataSource.searchCity(query)
+
+    fun reverseGeocode(lat: Double, lon: Double): Flow<ResponseState<CityResponse>> =
+        weatherRemoteDataSource.reverseGeocode(lat, lon)
 }

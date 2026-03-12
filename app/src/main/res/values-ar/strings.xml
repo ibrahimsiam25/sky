@@ -33,6 +33,12 @@
     <string name="fav_search_hint">ابحث عن مدينة…</string>
     <string name="fav_search_no_results">لا توجد مدن</string>
     <string name="fav_btn_confirm">إضافة إلى المفضلة</string>
+    <string name="favourite_empty">لا توجد مواقع مفضلة بعد</string>
+    <string name="favourite_delete_title">حذف المفضلة</string>
+    <string name="favourite_delete_message">هل أنت متأكد من حذف هذا الموقع؟</string>
+    <string name="favourite_region_label">المنطقة</string>
+    <string name="favourite_unknown_region">منطقة غير معروفة</string>
+    <string name="delete">حذف</string>
     <string name="unit_wind_mph">%1$s ميل/س</string>
 
     <string name="high_low">أعلى:%1$d%3$s أدنى:%2$d%3$s</string>

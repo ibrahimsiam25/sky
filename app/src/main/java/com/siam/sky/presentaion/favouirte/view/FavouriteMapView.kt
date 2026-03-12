@@ -37,6 +37,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.siam.sky.core.db.WeatherDataBase
+import com.siam.sky.data.datasources.local.FavouriteLocalDataSource
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -46,6 +48,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.siam.sky.R
 import com.siam.sky.data.datasources.remote.WeatherRemoteDataSource
+import com.siam.sky.data.repo.FavouriteRepo
 import com.siam.sky.data.repo.WeatherRepo
 import com.siam.sky.presentaion.favouirte.viewmodel.FavouriteMapViewModel
 import com.siam.sky.ui.theme.NavStroke
@@ -56,8 +59,13 @@ import com.siam.sky.ui.theme.WeekCardStart
 
 @Composable
 fun FavouriteMapView(onNavigateBack: () -> Unit) {
+    val context = LocalContext.current
+    val database = WeatherDataBase.getInstance(context)
     val viewModel: FavouriteMapViewModel = viewModel(
-        factory = FavouriteMapViewModel.factory(WeatherRepo(WeatherRemoteDataSource()))
+        factory = FavouriteMapViewModel.factory(
+            WeatherRepo(WeatherRemoteDataSource()),
+            FavouriteRepo(FavouriteLocalDataSource(database.getFavouriteLocationDao()))
+        )
     )
 
     val searchQuery by viewModel.searchQuery.collectAsState()
@@ -164,7 +172,7 @@ fun FavouriteMapView(onNavigateBack: () -> Unit) {
                 .padding(horizontal = 20.dp, vertical = 16.dp)
         ) {
             Button(
-                onClick = onNavigateBack,
+                onClick = { viewModel.confirmSelection(onNavigateBack) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),

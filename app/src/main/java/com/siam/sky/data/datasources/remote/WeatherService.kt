@@ -2,6 +2,7 @@ package com.siam.sky.data.datasources.remote
 
 import com.siam.sky.BuildConfig
 import com.siam.sky.core.network.RetrofitHelper
+import com.siam.sky.data.models.CityResponse
 import com.siam.sky.data.models.DailyForecastResponse
 import com.siam.sky.data.models.HourlyForecastResponse
 import com.siam.sky.data.models.WeatherResponse
@@ -36,4 +37,11 @@ interface WeatherService {
         @Query("units") units: String = "metric",
         @Query("cnt") cnt: Int = 24
     ): HourlyForecastResponse
+
+    @GET("geo/1.0/direct")
+    suspend fun searchCity(
+        @Query("q") query: String,
+        @Query("limit") limit: Int = 5,
+        @Query("appid") appId: String = BuildConfig.APIKEY,
+    ): CityResponse
 }

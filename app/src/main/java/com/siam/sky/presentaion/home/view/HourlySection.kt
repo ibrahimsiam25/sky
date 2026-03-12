@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.siam.sky.R
-import com.siam.sky.core.ApiState
+import com.siam.sky.core.ResponseState
 import com.siam.sky.core.helper.AppUnit
 import com.siam.sky.core.helper.forecastDrawableForWeather
 import com.siam.sky.data.models.HourlyForecastResponse
@@ -50,14 +50,14 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun HourlySection(state: ApiState<HourlyForecastResponse>, unit: AppUnit) {
+fun HourlySection(state: ResponseState<HourlyForecastResponse>, unit: AppUnit) {
     when (state) {
-        is ApiState.Loading -> Box(
+        is ResponseState.Loading -> Box(
             modifier = Modifier.fillMaxWidth().height(146.dp),
             contentAlignment = Alignment.Center
         ) { CircularProgressIndicator(color = Color.White, modifier = Modifier.size(28.dp)) }
 
-        is ApiState.Success -> {
+        is ResponseState.Success -> {
             val nowMs = System.currentTimeMillis()
             val items = state.data.list
             val nowIndex = items.indexOfFirst { it.dt * 1000L >= nowMs }.takeIf { it >= 0 } ?: 0
@@ -72,14 +72,14 @@ fun HourlySection(state: ApiState<HourlyForecastResponse>, unit: AppUnit) {
             }
         }
 
-        is ApiState.Error -> Text(
+        is ResponseState.Error -> Text(
             text = stringResource(R.string.hourly_unavailable),
             color = WhiteFaded,
             fontSize = 13.sp,
             modifier = Modifier.padding(horizontal = 20.dp)
         )
 
-        is ApiState.Idle -> Unit
+        is ResponseState.Idle -> Unit
     }
 }
 

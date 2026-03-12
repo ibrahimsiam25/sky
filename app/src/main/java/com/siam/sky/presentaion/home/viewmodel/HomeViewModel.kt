@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.siam.sky.core.ApiState
+import com.siam.sky.core.ResponseState
 import com.siam.sky.core.helper.AppLanguage
 import com.siam.sky.core.helper.AppLoctionMode
 import com.siam.sky.core.helper.AppUnit
@@ -41,20 +41,23 @@ class HomeViewModel(
     private val _permissionStatus = MutableStateFlow(PermissionStatus.UNKNOWN)
     val permissionStatus: StateFlow<PermissionStatus> = _permissionStatus.asStateFlow()
 
-    private val _weatherState = MutableStateFlow<ApiState<WeatherResponse>>(ApiState.Idle)
-    val weatherState: StateFlow<ApiState<WeatherResponse>> = _weatherState.asStateFlow()
+    private val _weatherState = MutableStateFlow<ResponseState<WeatherResponse>>(ResponseState.Idle)
+    val weatherState: StateFlow<ResponseState<WeatherResponse>> = _weatherState.asStateFlow()
 
-    private val _hourlyState = MutableStateFlow<ApiState<HourlyForecastResponse>>(ApiState.Idle)
-    val hourlyState: StateFlow<ApiState<HourlyForecastResponse>> = _hourlyState.asStateFlow()
+    private val _hourlyState = MutableStateFlow<ResponseState<HourlyForecastResponse>>(ResponseState.Idle)
+    val hourlyState: StateFlow<ResponseState<HourlyForecastResponse>> = _hourlyState.asStateFlow()
 
-    private val _dailyState = MutableStateFlow<ApiState<DailyForecastResponse>>(ApiState.Idle)
-    val dailyState: StateFlow<ApiState<DailyForecastResponse>> = _dailyState.asStateFlow()
+    private val _dailyState = MutableStateFlow<ResponseState<DailyForecastResponse>>(ResponseState.Idle)
+    val dailyState: StateFlow<ResponseState<DailyForecastResponse>> = _dailyState.asStateFlow()
 
     private val _unitState = MutableStateFlow(userRepo.getSavedAppUnit())
     val unitState: StateFlow<AppUnit> = _unitState.asStateFlow()
 
     private val _showPermissionDialog = MutableStateFlow(false)
     val showPermissionDialog: StateFlow<Boolean> = _showPermissionDialog.asStateFlow()
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     init {
         observePermissionChanges()
@@ -76,6 +79,12 @@ class HomeViewModel(
         _showPermissionDialog.value = false
     }
 
+    fun refresh() {
+        val location = _locationState.value ?: return
+        _isRefreshing.value = true
+        fetchWeather(location.latitude, location.longitude)
+    }
+
     private fun requestFreshLocation() {
         locationJob?.cancel()
         locationJob = viewModelScope.launch {
@@ -93,12 +102,19 @@ class HomeViewModel(
         hourlyJob?.cancel()
         dailyJob?.cancel()
 
+        _weatherState.value = ResponseState.Loading
+        _hourlyState.value = ResponseState.Loading
+        _dailyState.value = ResponseState.Loading
+
         weatherJob = viewModelScope.launch {
             weatherRepo.getCurrentWeather(lat, lon, currentLanguage.apiLanguage,currentUnit).collect { state ->
                 _weatherState.value = state
-                if (state is ApiState.Success) {
+                if (state is ResponseState.Success) {
+                    _isRefreshing.value = false
                     fetchHourlyForecast(state.data.name)
                     fetchDailyForecast(state.data.name)
+                } else if (state is ResponseState.Error) {
+                    _isRefreshing.value = false
                 }
             }
         }
@@ -155,7 +171,12 @@ class HomeViewModel(
                     userRepo.getSavedLocationMode() == AppLoctionMode.GPS
                 ) {
                     val saved = userRepo.getSavedLocationSource()
+
                     if (saved.first != 0f && saved.second != 0f) {
+                        _locationState.value = Location("map_pick").apply {
+                            latitude = saved.first.toDouble()
+                            longitude = saved.second.toDouble()
+                        }
                         fetchWeather(saved.first.toDouble(), saved.second.toDouble())
                     } else {
 

@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import com.siam.sky.R
-import com.siam.sky.core.ApiState
+import com.siam.sky.core.ResponseState
 import com.siam.sky.core.helper.AppUnit
 import com.siam.sky.core.helper.forecastDrawableForWeather
 import com.siam.sky.data.models.DailyForecastResponse
@@ -49,17 +49,17 @@ import java.util.Locale
 
 @Composable
 fun WeeklySection(
-    state: ApiState<DailyForecastResponse>,
-    weatherState: ApiState<WeatherResponse>,
+    state: ResponseState<DailyForecastResponse>,
+    weatherState: ResponseState<WeatherResponse>,
     unit: AppUnit
 ) {
     when (state) {
-        is ApiState.Loading -> Box(
+        is ResponseState.Loading -> Box(
             modifier = Modifier.fillMaxWidth().height(200.dp),
             contentAlignment = Alignment.Center
         ) { CircularProgressIndicator(color = Color.White, modifier = Modifier.size(28.dp)) }
 
-        is ApiState.Success -> Column(
+        is ResponseState.Success -> Column(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
@@ -68,14 +68,14 @@ fun WeeklySection(
             }
         }
 
-        is ApiState.Error -> Text(
+        is ResponseState.Error -> Text(
             text = stringResource(R.string.weekly_unavailable),
             color = WhiteFaded,
             fontSize = 13.sp,
             modifier = Modifier.padding(horizontal = 20.dp)
         )
 
-        is ApiState.Idle -> Unit
+        is ResponseState.Idle -> Unit
     }
 }
 

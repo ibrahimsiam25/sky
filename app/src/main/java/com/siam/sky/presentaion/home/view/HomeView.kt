@@ -32,6 +32,7 @@ fun HomeView() {
     val hourlyState by viewModel.hourlyState.collectAsState()
     val dailyState by viewModel.dailyState.collectAsState()
     val unit by viewModel.unitState.collectAsState()
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
 
     permissionHandler.Bind()
 
@@ -40,7 +41,9 @@ fun HomeView() {
         hourlyState = hourlyState,
         dailyState = dailyState,
         location = location,
-        unit = unit
+        unit = unit,
+        isRefreshing = isRefreshing,
+        onRefresh = { viewModel.refresh() }
     )
 }
 

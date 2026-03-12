@@ -1,8 +1,8 @@
 package com.siam.sky.core
 
-sealed class ApiState<out T> {
-    object Loading : ApiState<Nothing>()
-    object Idle : ApiState<Nothing>()
-    data class Success<T>(val data: T) : ApiState<T>()
-    data class Error(val message: String) : ApiState<Nothing>()
+sealed class ResponseState<out T> {
+    object Loading : ResponseState<Nothing>()
+    object Idle : ResponseState<Nothing>()
+    data class Success<T>(val data: T) : ResponseState<T>()
+    data class Error(val message: String) : ResponseState<Nothing>()
 }

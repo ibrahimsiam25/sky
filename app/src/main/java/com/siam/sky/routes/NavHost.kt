@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.siam.sky.presentaion.alerts.view.AlertsView
+import com.siam.sky.presentaion.favouirte.view.FavouriteMapView
 import com.siam.sky.presentaion.favouirte.view.FavouriteView
 import com.siam.sky.presentaion.home.view.HomeView
 import com.siam.sky.presentaion.settings.view.MapView
@@ -45,9 +46,12 @@ fun App() {
         ) {
             composable<Route.HomeView> { HomeView() }
             composable<Route.AlertsView> { AlertsView() }
-            composable<Route.FavouriteView> { FavouriteView() }
+            composable<Route.FavouriteView> {
+                FavouriteView(onNavigateToMap = { controller.navigate(Route.FavouriteMapView) })
+            }
             composable<Route.SettingsView> { SettingsView(onNavigateToMap = { controller.navigate(Route.MapView) }) }
             composable<Route.MapView> { MapView(onNavigateBack = { controller.popBackStack() }) }
+            composable<Route.FavouriteMapView> { FavouriteMapView(onNavigateBack = { controller.popBackStack() }) }
         }
     }
 }

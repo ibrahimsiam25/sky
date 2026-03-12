@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun FavouriteView() {
+fun FavouriteView(onNavigateToMap: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         Background()
 
@@ -38,7 +38,7 @@ fun FavouriteView() {
         }
 
         FloatingActionButton(
-            onClick = { },
+            onClick = onNavigateToMap,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 80.dp, end = 20.dp),

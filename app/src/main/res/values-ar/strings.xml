@@ -28,6 +28,11 @@
     <string name="unit_temp_c">°م</string>
     <string name="unit_temp_f">°ف</string>
     <string name="unit_temp_k"> ك</string>
+
+    <string name="fav_map_screen_title">إضافة موقع مفضل</string>
+    <string name="fav_search_hint">ابحث عن مدينة…</string>
+    <string name="fav_search_no_results">لا توجد مدن</string>
+    <string name="fav_btn_confirm">إضافة إلى المفضلة</string>
     <string name="unit_wind_mph">%1$s ميل/س</string>
 
     <string name="high_low">أعلى:%1$d%3$s أدنى:%2$d%3$s</string>

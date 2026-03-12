@@ -19,4 +19,7 @@ sealed class Route {
 
     @Serializable
     object MapView : Route()
+
+    @Serializable
+    object FavouriteMapView : Route()
 }

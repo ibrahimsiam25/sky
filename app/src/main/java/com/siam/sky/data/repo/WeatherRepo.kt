@@ -1,7 +1,9 @@
 package com.siam.sky.data.repo
 
+import androidx.room.Query
 import com.siam.sky.core.ResponseState
 import com.siam.sky.data.datasources.remote.WeatherRemoteDataSource
+import com.siam.sky.data.models.CityResponse
 import com.siam.sky.data.models.DailyForecastResponse
 import com.siam.sky.data.models.HourlyForecastResponse
 import com.siam.sky.data.models.WeatherResponse
@@ -16,4 +18,7 @@ class WeatherRepo(private val weatherRemoteDataSource: WeatherRemoteDataSource) 
 
     fun getDailyForecast(city: String, language: String, cnt: Int = 7 ,unit: String): Flow<ResponseState<DailyForecastResponse>> =
         weatherRemoteDataSource.getDailyForecast(city, language, cnt,  unit)
+
+    fun  searchCity(query: String ): Flow<ResponseState<CityResponse>> =
+        weatherRemoteDataSource.searchCity(query)
 }

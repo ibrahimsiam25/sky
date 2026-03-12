@@ -81,4 +81,9 @@
     <string name="permission_notification_title">Notification Permission Required</string>
     <string name="permission_retry">Allow</string>
     <string name="select_end_time_hint">Select end time (after start time)</string>
+
+    <string name="fav_map_screen_title">Add Favourite Location</string>
+    <string name="fav_search_hint">Search city…</string>
+    <string name="fav_search_no_results">No cities found</string>
+    <string name="fav_btn_confirm">Add to Favourites</string>
 </resources>

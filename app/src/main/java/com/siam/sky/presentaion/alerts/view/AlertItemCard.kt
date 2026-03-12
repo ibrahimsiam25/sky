@@ -44,7 +44,7 @@ fun AlertItemCard(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Leading icon
+
         Icon(
             imageVector = Icons.Filled.Notifications,
             contentDescription = null,
@@ -54,7 +54,7 @@ fun AlertItemCard(
                 .padding(end = 4.dp)
         )
 
-        // Info
+
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = "$typeLabel ${stringResource(R.string.nav_alerts)}",
@@ -74,7 +74,7 @@ fun AlertItemCard(
             )
         }
 
-        // Toggle switch
+
         Switch(
             checked = alert.isActive,
             onCheckedChange = { onToggle(alert) },

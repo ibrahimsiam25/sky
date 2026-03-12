@@ -80,7 +80,7 @@ fun AddAlertDialog(
                     )
                 }
 
-                // --- Start time ---
+
                 Button(
                     onClick = {
                         pickDateTime(context) { time ->
@@ -91,7 +91,7 @@ fun AddAlertDialog(
                             } else {
                                 startError = null
                                 startTime = time
-                                // Re-validate end time
+                    
                                 if (endTime != null && endTime!! <= time) {
                                     endError = "before_start"
                                 } else {
@@ -115,7 +115,7 @@ fun AddAlertDialog(
                     )
                 }
 
-                // --- End time ---
+
                 Button(
                     onClick = {
                         pickDateTime(context) { time ->

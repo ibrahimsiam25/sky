@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import android.graphics.drawable.ColorDrawable
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.siam.sky.core.helper.AppLocaleManager
 import com.siam.sky.presentaion.map.view.MapView
 import com.siam.sky.routes.App
@@ -30,6 +31,7 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         val savedLanguage = mainViewModel.getSavedAppLanguage()
         AppLocaleManager.applyLanguage(this, savedLanguage)
         super.onCreate(savedInstanceState)

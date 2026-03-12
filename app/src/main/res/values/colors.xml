@@ -8,4 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="system_bar_red">#641E1E3C</color>
+    <color name="splash_color">#362A84</color>
 </resources>

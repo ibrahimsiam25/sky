@@ -10,19 +10,20 @@ import com.siam.sky.data.datasources.local.AlertDao
 import com.siam.sky.data.datasources.local.FavouriteLocationDao
 import com.siam.sky.data.datasources.local.WeatherDao
 import com.siam.sky.data.models.AlertModel
-import com.siam.sky.data.models.FavouriteLocationEntity
 import com.siam.sky.data.models.WeatherEntity
+import com.siam.sky.data.models.FavouriteLocationEntity
 
 @Database(
     entities = [WeatherEntity::class, AlertModel::class, FavouriteLocationEntity::class],
-    version = 4,
+    version = 6,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class WeatherDataBase : RoomDatabase() {
-    abstract fun getWeatherDao(): WeatherDao
+
     abstract fun getAlertDao(): AlertDao
     abstract fun getFavouriteLocationDao(): FavouriteLocationDao
+    abstract fun getWeatherDao(): WeatherDao
 
     companion object {
         @Volatile

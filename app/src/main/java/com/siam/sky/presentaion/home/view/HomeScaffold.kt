@@ -55,6 +55,11 @@ fun HomeScaffold(
         dailyState is ResponseState.Error -> dailyState.message
         else -> null
     }
+    val localizedErrorMessage = when (errorMessage) {
+        "no_internet_no_cache" -> stringResource(R.string.error_no_internet_no_cache)
+        "no_internet" -> stringResource(R.string.error_no_internet)
+        else -> errorMessage
+    }
 
     PullToRefreshBox(
         isRefreshing = isRefreshing,
@@ -79,7 +84,7 @@ fun HomeScaffold(
             errorMessage != null -> {
                 AppErrorView(
                     title = stringResource(R.string.home_error_title),
-                    message = errorMessage,
+                    message = localizedErrorMessage ?: "",
                     modifier = Modifier
                         .fillMaxSize()
                         .safeDrawingPadding(),

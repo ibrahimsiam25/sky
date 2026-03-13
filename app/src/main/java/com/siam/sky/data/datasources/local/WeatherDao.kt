@@ -9,11 +9,8 @@ import com.siam.sky.data.models.WeatherEntity
 @Dao
 interface WeatherDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertWeather(weather: WeatherEntity)
+    suspend fun insert(entity: WeatherEntity)
 
-    @Query("SELECT * FROM weather_table ORDER BY id DESC")
-    suspend fun getAllWeather(): List<WeatherEntity>
-
-    @Query("DELETE FROM weather_table")
-    suspend fun deleteAllWeather()
+    @Query("SELECT * FROM weather WHERE locationKey = :key LIMIT 1")
+    suspend fun getByKey(key: String): WeatherEntity?
 }

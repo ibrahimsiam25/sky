@@ -92,4 +92,7 @@
     <string name="favourite_region_label">Region</string>
     <string name="favourite_unknown_region">Unknown region</string>
     <string name="delete">Delete</string>
+    <string name="error_no_internet">No internet connection.</string>
+    <string name="error_no_internet_no_cache">No internet and no local weather data available.</string>
+    <string name="network_back_refreshing">Internet is back. Updating weather...</string>
 </resources>

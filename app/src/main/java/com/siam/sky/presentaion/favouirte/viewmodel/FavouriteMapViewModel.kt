@@ -7,7 +7,6 @@ import com.siam.sky.core.ResponseState
 import com.siam.sky.data.models.CityModel
 import com.siam.sky.data.models.CityResponse
 import com.siam.sky.data.models.FavouriteLocationEntity
-import com.siam.sky.data.repo.FavouriteRepo
 import com.siam.sky.data.repo.WeatherRepo
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,8 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class FavouriteMapViewModel(
-    private val weatherRepo: WeatherRepo,
-    private val favouriteRepo: FavouriteRepo
+    private val weatherRepo: WeatherRepo
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
@@ -66,7 +64,7 @@ class FavouriteMapViewModel(
         val (lat, lon) = _pickedLocation.value
         viewModelScope.launch {
             val regionName = resolveRegionName(lat, lon)
-            favouriteRepo.insertFavourite(
+            weatherRepo.insertFavourite(
                 FavouriteLocationEntity(
                     name = regionName,
                     lat = lat,
@@ -103,10 +101,10 @@ class FavouriteMapViewModel(
     }
 
     companion object {
-        fun factory(weatherRepo: WeatherRepo, favouriteRepo: FavouriteRepo) = object : ViewModelProvider.Factory {
+        fun factory(weatherRepo: WeatherRepo) = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return FavouriteMapViewModel(weatherRepo, favouriteRepo) as T
+                return FavouriteMapViewModel(weatherRepo) as T
             }
         }
     }

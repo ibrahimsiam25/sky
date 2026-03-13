@@ -2,27 +2,39 @@
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import android.widget.Toast
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.siam.sky.data.datasources.local.UserLocalDataSource
 import com.siam.sky.data.datasources.remote.WeatherRemoteDataSource
 import com.siam.sky.data.repo.UserRepo
 import com.siam.sky.data.repo.WeatherRepo
-import com.siam.sky.presentaion.home.view.HomePermissionHandler
 import com.siam.sky.presentaion.home.viewmodel.HomeViewModel
-import com.siam.sky.core.helper.AppUnit
+import com.siam.sky.core.db.WeatherDataBase
+import com.siam.sky.core.network.NetworkMonitor
+import com.siam.sky.data.datasources.local.FavouriteLocalDataSource
+import com.siam.sky.data.datasources.local.WeatherLocalDataSource
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeView() {
     val context = LocalContext.current
+    val networkMonitor = NetworkMonitor(context)
     val viewModel: HomeViewModel = viewModel(
         factory = HomeViewModel.factory(UserRepo(UserLocalDataSource(context)),
-            WeatherRepo(WeatherRemoteDataSource())
+            WeatherRepo(
+                WeatherRemoteDataSource(),
+                WeatherLocalDataSource(WeatherDataBase.getInstance(context).getWeatherDao()),
+                FavouriteLocalDataSource(WeatherDataBase.getInstance(context).getFavouriteLocationDao()),
+                networkMonitor
+            ),
+            networkMonitor
         )
     )
     val permissionHandler = remember(viewModel) { HomePermissionHandler(viewModel) }
@@ -33,6 +45,12 @@ fun HomeView() {
     val dailyState by viewModel.dailyState.collectAsState()
     val unit by viewModel.unitState.collectAsState()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
+
+    LaunchedEffect(viewModel) {
+        viewModel.toastEvent.collectLatest { resId ->
+            Toast.makeText(context, context.getString(resId), Toast.LENGTH_SHORT).show()
+        }
+    }
 
     permissionHandler.Bind()
 

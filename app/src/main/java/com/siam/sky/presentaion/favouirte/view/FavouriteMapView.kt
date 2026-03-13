@@ -2,7 +2,6 @@ package com.siam.sky.presentaion.favouirte.view
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.siam.sky.core.db.WeatherDataBase
+import com.siam.sky.core.network.NetworkMonitor
 import com.siam.sky.data.datasources.local.FavouriteLocalDataSource
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -48,10 +48,9 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.siam.sky.R
 import com.siam.sky.data.datasources.remote.WeatherRemoteDataSource
-import com.siam.sky.data.repo.FavouriteRepo
+import com.siam.sky.data.datasources.local.WeatherLocalDataSource
 import com.siam.sky.data.repo.WeatherRepo
 import com.siam.sky.presentaion.favouirte.viewmodel.FavouriteMapViewModel
-import com.siam.sky.ui.theme.NavStroke
 import com.siam.sky.ui.theme.NavSurfaceBottom
 import com.siam.sky.ui.theme.NavSurfaceTop
 import com.siam.sky.ui.theme.WeekCardEnd
@@ -61,10 +60,15 @@ import com.siam.sky.ui.theme.WeekCardStart
 fun FavouriteMapView(onNavigateBack: () -> Unit) {
     val context = LocalContext.current
     val database = WeatherDataBase.getInstance(context)
+    val networkMonitor = NetworkMonitor(context)
     val viewModel: FavouriteMapViewModel = viewModel(
         factory = FavouriteMapViewModel.factory(
-            WeatherRepo(WeatherRemoteDataSource()),
-            FavouriteRepo(FavouriteLocalDataSource(database.getFavouriteLocationDao()))
+            WeatherRepo(
+                WeatherRemoteDataSource(),
+                WeatherLocalDataSource(database.getWeatherDao()),
+                FavouriteLocalDataSource(database.getFavouriteLocationDao()),
+                networkMonitor
+            )
         )
     )
 

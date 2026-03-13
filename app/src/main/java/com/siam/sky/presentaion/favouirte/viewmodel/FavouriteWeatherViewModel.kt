@@ -3,9 +3,11 @@ package com.siam.sky.presentaion.favouirte.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.siam.sky.R
 import com.siam.sky.core.ResponseState
 import com.siam.sky.core.helper.AppLanguage
 import com.siam.sky.core.helper.AppUnit
+import com.siam.sky.core.network.NetworkMonitor
 import com.siam.sky.data.models.DailyForecastResponse
 import com.siam.sky.data.models.HourlyForecastResponse
 import com.siam.sky.data.models.WeatherResponse
@@ -13,15 +15,19 @@ import com.siam.sky.data.repo.UserRepo
 import com.siam.sky.data.repo.WeatherRepo
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 
 class FavouriteWeatherViewModel(
     private val lat: Double,
     private val lon: Double,
     private val userRepo: UserRepo,
-    private val weatherRepo: WeatherRepo
+    private val weatherRepo: WeatherRepo,
+    private val networkMonitor: NetworkMonitor
 ) : ViewModel() {
 
     private var currentLanguage: AppLanguage = userRepo.getSavedAppLanguage()
@@ -46,10 +52,14 @@ class FavouriteWeatherViewModel(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
+    private val _toastEvent = MutableSharedFlow<Int>(extraBufferCapacity = 1)
+    val toastEvent: SharedFlow<Int> = _toastEvent
+
     init {
         observeUnitChanges()
         observeLanguageChanges()
         fetchWeather(lat, lon)
+        observeConnectivity()
     }
 
     fun refresh() {
@@ -71,8 +81,8 @@ class FavouriteWeatherViewModel(
                 _weatherState.value = state
                 if (state is ResponseState.Success) {
                     _isRefreshing.value = false
-                    fetchHourlyForecast(state.data.name)
-                    fetchDailyForecast(state.data.name)
+                    fetchHourlyForecast(lat, lon, state.data.name)
+                    fetchDailyForecast(lat, lon, state.data.name)
                 } else if (state is ResponseState.Error) {
                     _isRefreshing.value = false
                 }
@@ -80,21 +90,34 @@ class FavouriteWeatherViewModel(
         }
     }
 
-    private fun fetchHourlyForecast(city: String) {
+    private fun fetchHourlyForecast(lat: Double, lon: Double, city: String) {
         hourlyJob?.cancel()
         hourlyJob = viewModelScope.launch {
-            weatherRepo.getHourlyForecast(city, currentLanguage.apiLanguage, currentUnit).collect { state ->
+            weatherRepo.getHourlyForecast(lat, lon, city, currentLanguage.apiLanguage, currentUnit).collect { state ->
                 _hourlyState.value = state
             }
         }
     }
 
-    private fun fetchDailyForecast(city: String) {
+    private fun fetchDailyForecast(lat: Double, lon: Double, city: String) {
         dailyJob?.cancel()
         dailyJob = viewModelScope.launch {
-            weatherRepo.getDailyForecast(city, currentLanguage.apiLanguage, cnt = 7, currentUnit).collect { state ->
+            weatherRepo.getDailyForecast(lat, lon, city, currentLanguage.apiLanguage, cnt = 7, currentUnit).collect { state ->
                 _dailyState.value = state
             }
+        }
+    }
+
+    private fun observeConnectivity() {
+        viewModelScope.launch {
+            networkMonitor.observeConnectivity()
+                .drop(1)
+                .collect { isConnected ->
+                    if (isConnected) {
+                        _toastEvent.tryEmit(R.string.network_back_refreshing)
+                        fetchWeather(lat, lon)
+                    }
+                }
         }
     }
 
@@ -128,11 +151,12 @@ class FavouriteWeatherViewModel(
             lat: Double,
             lon: Double,
             userRepo: UserRepo,
-            weatherRepo: WeatherRepo
+            weatherRepo: WeatherRepo,
+            networkMonitor: NetworkMonitor
         ) = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return FavouriteWeatherViewModel(lat, lon, userRepo, weatherRepo) as T
+                return FavouriteWeatherViewModel(lat, lon, userRepo, weatherRepo, networkMonitor) as T
             }
         }
     }

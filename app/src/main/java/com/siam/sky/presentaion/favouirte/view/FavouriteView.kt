@@ -32,8 +32,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.siam.sky.core.db.WeatherDataBase
 import com.siam.sky.data.datasources.local.FavouriteLocalDataSource
+import com.siam.sky.data.datasources.local.WeatherLocalDataSource
+import com.siam.sky.data.datasources.remote.WeatherRemoteDataSource
+import com.siam.sky.core.network.NetworkMonitor
 import com.siam.sky.data.models.FavouriteLocationEntity
-import com.siam.sky.data.repo.FavouriteRepo
+import com.siam.sky.data.repo.WeatherRepo
 import com.siam.sky.presentaion.favouirte.viewmodel.FavouriteViewModel
 
 @Composable
@@ -43,9 +46,15 @@ fun FavouriteView(
 ) {
     val context = LocalContext.current
     val database = WeatherDataBase.getInstance(context)
+    val networkMonitor = NetworkMonitor(context)
     val viewModel: FavouriteViewModel = viewModel(
         factory = FavouriteViewModel.factory(
-            FavouriteRepo(FavouriteLocalDataSource(database.getFavouriteLocationDao()))
+            WeatherRepo(
+                WeatherRemoteDataSource(),
+                WeatherLocalDataSource(database.getWeatherDao()),
+                FavouriteLocalDataSource(database.getFavouriteLocationDao()),
+                networkMonitor
+            )
         )
     )
     val favourites by viewModel.favouritesState.collectAsState()

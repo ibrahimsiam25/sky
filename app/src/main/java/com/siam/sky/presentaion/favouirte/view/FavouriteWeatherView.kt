@@ -5,12 +5,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import android.widget.Toast
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -26,6 +28,11 @@ import com.siam.sky.data.repo.UserRepo
 import com.siam.sky.data.repo.WeatherRepo
 import com.siam.sky.presentaion.favouirte.viewmodel.FavouriteWeatherViewModel
 import com.siam.sky.presentaion.home.view.HomeScaffold
+import com.siam.sky.core.db.WeatherDataBase
+import com.siam.sky.core.network.NetworkMonitor
+import com.siam.sky.data.datasources.local.FavouriteLocalDataSource
+import com.siam.sky.data.datasources.local.WeatherLocalDataSource
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun FavouriteWeatherView(
@@ -34,12 +41,19 @@ fun FavouriteWeatherView(
     onNavigateBack: () -> Unit
 ) {
     val context = LocalContext.current
+    val networkMonitor = NetworkMonitor(context)
     val viewModel: FavouriteWeatherViewModel = viewModel(
         factory = FavouriteWeatherViewModel.factory(
             lat = lat,
             lon = lon,
             userRepo = UserRepo(UserLocalDataSource(context)),
-            weatherRepo = WeatherRepo(WeatherRemoteDataSource())
+            weatherRepo = WeatherRepo(
+                WeatherRemoteDataSource(),
+                WeatherLocalDataSource(WeatherDataBase.getInstance(context).getWeatherDao()),
+                FavouriteLocalDataSource(WeatherDataBase.getInstance(context).getFavouriteLocationDao()),
+                networkMonitor
+            ),
+            networkMonitor = networkMonitor
         )
     )
 
@@ -48,6 +62,12 @@ fun FavouriteWeatherView(
     val dailyState by viewModel.dailyState.collectAsState()
     val unit by viewModel.unitState.collectAsState()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
+
+    LaunchedEffect(viewModel) {
+        viewModel.toastEvent.collectLatest { resId ->
+            Toast.makeText(context, context.getString(resId), Toast.LENGTH_SHORT).show()
+        }
+    }
 
     Box {
         HomeScaffold(

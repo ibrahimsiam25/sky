@@ -57,9 +57,13 @@ import com.siam.sky.ui.theme.NavStroke
 import com.siam.sky.ui.theme.WeekCardStart
 import org.koin.androidx.compose.koinViewModel
 
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+
 @Composable
 fun MapView(onNavigateBack: () -> Unit) {
     val viewModel: MapViewModel = koinViewModel()
+    val context = LocalContext.current
 
     val pickedLocation by viewModel.pickedLocation.collectAsState()
     val isLoading by viewModel.isLoadingCurrentLocation.collectAsState()
@@ -204,7 +208,13 @@ fun MapView(onNavigateBack: () -> Unit) {
 
             // "Select This Location" button
             Button(
-                onClick = { viewModel.confirmSelection(onNavigateBack) },
+                onClick = { 
+                    if (viewModel.isConnected()) {
+                        viewModel.confirmSelection(onNavigateBack) 
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.error_no_internet), Toast.LENGTH_SHORT).show()
+                    }
+                },
                 modifier = Modifier.fillMaxWidth().height(52.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)

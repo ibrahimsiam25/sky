@@ -157,8 +157,15 @@ fun FavouriteMapView(onNavigateBack: () -> Unit) {
                 .navigationBarsPadding()
                 .padding(horizontal = 20.dp, vertical = 16.dp)
         ) {
+            val context = LocalContext.current
             Button(
-                onClick = { viewModel.confirmSelection(onNavigateBack) },
+                onClick = { 
+                    if (viewModel.isConnected()) {
+                        viewModel.confirmSelection(onNavigateBack) 
+                    } else {
+                        android.widget.Toast.makeText(context, context.getString(R.string.error_no_internet), android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),

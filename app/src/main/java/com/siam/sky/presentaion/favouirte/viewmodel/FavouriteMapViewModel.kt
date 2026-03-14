@@ -3,6 +3,7 @@ package com.siam.sky.presentaion.favouirte.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.siam.sky.core.ResponseState
+import com.siam.sky.core.network.NetworkMonitor
 import com.siam.sky.data.models.CityModel
 import com.siam.sky.data.models.CityResponse
 import com.siam.sky.data.models.FavouriteLocationEntity
@@ -14,7 +15,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class FavouriteMapViewModel(
-    private val weatherRepo: WeatherRepo
+    private val weatherRepo: WeatherRepo,
+    private val networkMonitor: NetworkMonitor
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
@@ -97,6 +99,10 @@ class FavouriteMapViewModel(
         }
 
         return resolvedName
+    }
+
+    fun isConnected(): Boolean {
+        return networkMonitor.isConnected()
     }
 
 }

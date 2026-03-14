@@ -40,9 +40,8 @@ class UserLocalDataSourceImp(
                 trySend(getSavedAppLanguage())
             }
         }
-
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
-
+        trySend(getSavedAppLanguage())
         awaitClose {
             sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener)
         }
@@ -56,7 +55,7 @@ class UserLocalDataSourceImp(
         }
 
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
-
+        trySend(getSavedAppUnit())
         awaitClose {
             sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener)
         }
@@ -68,9 +67,8 @@ class UserLocalDataSourceImp(
                 trySend(getLastKnownLocation())
             }
         }
-
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
-
+        trySend(getLastKnownLocation())
         awaitClose {
             sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener)
         }
@@ -81,6 +79,7 @@ class UserLocalDataSourceImp(
             if (key == KEY_LOCATION_MODE) trySend(getSavedLocationMode())
         }
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
+        trySend(getSavedLocationMode())
         awaitClose { sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener) }
     }
 

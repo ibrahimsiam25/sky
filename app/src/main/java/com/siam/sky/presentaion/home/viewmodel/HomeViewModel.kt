@@ -218,6 +218,19 @@ class HomeViewModel(
                         }
                     }
                     AppLoctionMode.MAP -> {
+                        val saved = userRepo.getSavedLocationSource()
+                        if (saved.first != 0f && saved.second != 0f) {
+                            val loc = Location("map_pick").apply {
+                                latitude = saved.first.toDouble()
+                                longitude = saved.second.toDouble()
+                            }
+                            // Only trigger if location actually changed to avoid double fetch
+                            val currentLoc = _locationState.value
+                            if (currentLoc == null || currentLoc.latitude != saved.first.toDouble() || currentLoc.longitude != saved.second.toDouble()) {
+                                _locationState.value = loc
+                                fetchWeather(saved.first.toDouble(), saved.second.toDouble())
+                            }
+                        }
                     }
                 }
             }
@@ -239,8 +252,11 @@ class HomeViewModel(
                         latitude = lat.toDouble()
                         longitude = lon.toDouble()
                     }
-                    _locationState.value = loc
-                    fetchWeather(lat.toDouble(), lon.toDouble())
+                    val currentLoc = _locationState.value
+                    if (currentLoc == null || currentLoc.latitude != lat.toDouble() || currentLoc.longitude != lon.toDouble()) {
+                        _locationState.value = loc
+                        fetchWeather(lat.toDouble(), lon.toDouble())
+                    }
                 }
             }
         }

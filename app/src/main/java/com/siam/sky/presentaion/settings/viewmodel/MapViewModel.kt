@@ -56,8 +56,8 @@ class MapViewModel(
 
     fun confirmSelection(onDone: () -> Unit) {
         val (lat, lon) = _pickedLocation.value
-        userRepo.updateLocationSource(lat.toFloat(), lon.toFloat())
         userRepo.saveLocationMode(AppLoctionMode.MAP)
+        userRepo.updateLocationSource(lat.toFloat(), lon.toFloat())
         onDone()
     }
 

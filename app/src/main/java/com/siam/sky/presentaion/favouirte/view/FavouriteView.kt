@@ -32,6 +32,9 @@ import com.siam.sky.data.models.FavouriteLocationEntity
 import com.siam.sky.presentaion.favouirte.viewmodel.FavouriteViewModel
 import org.koin.androidx.compose.koinViewModel
 
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+
 @Composable
 fun FavouriteView(
     onNavigateToMap: () -> Unit,
@@ -40,6 +43,7 @@ fun FavouriteView(
     val viewModel: FavouriteViewModel = koinViewModel()
     val favourites by viewModel.favouritesState.collectAsState()
     var pendingDelete by remember { mutableStateOf<FavouriteLocationEntity?>(null) }
+    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         Background()
@@ -69,7 +73,13 @@ fun FavouriteView(
         }
 
         FloatingActionButton(
-            onClick = onNavigateToMap,
+            onClick = {
+                if (viewModel.isConnected()) {
+                    onNavigateToMap()
+                } else {
+                    Toast.makeText(context, context.getString(R.string.error_no_internet), Toast.LENGTH_SHORT).show()
+                }
+            },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 80.dp, end = 20.dp),

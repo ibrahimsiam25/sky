@@ -83,8 +83,11 @@ fun SettingsView(onNavigateToMap: () -> Unit) {
                 selectedLocation = selectedLocationMode,
                 onGpsSelected = { viewModel.selectLocationMode(AppLoctionMode.GPS) },
                 onMapSelected = {
-                    viewModel.selectLocationMode(AppLoctionMode.MAP)
-                    onNavigateToMap()
+                    if (viewModel.isConnected()) {
+                        onNavigateToMap()
+                    } else {
+                        android.widget.Toast.makeText(context, context.getString(R.string.error_no_internet), android.widget.Toast.LENGTH_SHORT).show()
+                    }
                 }
             )
 

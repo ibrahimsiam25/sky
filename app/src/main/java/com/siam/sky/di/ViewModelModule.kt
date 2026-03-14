@@ -15,10 +15,10 @@ val viewModelModule = module {
     single<MainViewModel> { MainViewModel(get()) }
 
     viewModel { HomeViewModel(get(), get(), get()) }
-    viewModel { SettingsViewModel(get()) }
-    viewModel { MapViewModel(get()) }
+    viewModel { SettingsViewModel(get(), get()) }
+    viewModel { MapViewModel(get(), get()) }
     viewModel { AlertsViewModel(get()) }
-    viewModel { FavouriteViewModel(get()) }
-    viewModel { FavouriteMapViewModel(get()) }
+    viewModel { FavouriteViewModel(get(), get()) }
+    viewModel { FavouriteMapViewModel(get(), get()) }
     viewModel { (lat: Double, lon: Double) -> FavouriteWeatherViewModel(lat, lon, get(), get(), get()) }
 }

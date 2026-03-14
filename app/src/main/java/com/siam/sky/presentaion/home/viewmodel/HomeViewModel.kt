@@ -228,6 +228,13 @@ class HomeViewModel(
         viewModelScope.launch {
             userRepo.observeLastKnownLocation().collect { (lat, lon) ->
                 if (userRepo.getSavedLocationMode() == AppLoctionMode.MAP) {
+                    if (lat == 0f && lon == 0f) {
+                        userRepo.saveLocationMode(AppLoctionMode.GPS)
+                        if (_permissionStatus.value == PermissionStatus.GRANTED) {
+                            requestFreshLocation()
+                        }
+                        return@collect
+                    }
                     val loc = Location("map_pick").apply {
                         latitude = lat.toDouble()
                         longitude = lon.toDouble()

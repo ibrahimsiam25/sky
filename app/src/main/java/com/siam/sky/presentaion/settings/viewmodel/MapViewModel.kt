@@ -4,13 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.siam.sky.core.helper.AppLoctionMode
 import com.siam.sky.data.repo.UserRepo
+import com.siam.sky.core.network.NetworkMonitor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class MapViewModel(private val userRepo: UserRepo) : ViewModel() {
+class MapViewModel(
+    private val userRepo: UserRepo,
+    private val networkMonitor: NetworkMonitor
+) : ViewModel() {
 
     private val saved = userRepo.getSavedLocationSource()
 
@@ -55,6 +59,10 @@ class MapViewModel(private val userRepo: UserRepo) : ViewModel() {
         userRepo.updateLocationSource(lat.toFloat(), lon.toFloat())
         userRepo.saveLocationMode(AppLoctionMode.MAP)
         onDone()
+    }
+
+    fun isConnected(): Boolean {
+        return networkMonitor.isConnected()
     }
 
 }

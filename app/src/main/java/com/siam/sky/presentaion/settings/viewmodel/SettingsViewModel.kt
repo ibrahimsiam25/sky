@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.siam.sky.core.helper.AppLanguage
 import com.siam.sky.core.helper.AppLoctionMode
 import com.siam.sky.core.helper.AppUnit
+import com.siam.sky.core.network.NetworkMonitor
 import com.siam.sky.data.repo.UserRepo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +13,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    private val userRepo: UserRepo
+    private val userRepo: UserRepo,
+    private val networkMonitor: NetworkMonitor
 ) : ViewModel() {
 
     private val _selectedLanguage = MutableStateFlow(userRepo.getSavedAppLanguage())
@@ -52,6 +54,10 @@ class SettingsViewModel(
     fun selectLocationMode(mode: AppLoctionMode) {
         userRepo.saveLocationMode(mode)
         _selectedLocationMode.value = mode
+    }
+
+    fun isConnected(): Boolean {
+        return networkMonitor.isConnected()
     }
 
 }

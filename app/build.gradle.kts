@@ -132,6 +132,9 @@ dependencies {
 
     // Android/Instrumented tests
     androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    testImplementation("androidx.test.ext:junit-ktx:1.1.5")
+    testImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTestVersion")
     androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
     androidTestImplementation("io.mockk:mockk-agent:$mockkVersion")

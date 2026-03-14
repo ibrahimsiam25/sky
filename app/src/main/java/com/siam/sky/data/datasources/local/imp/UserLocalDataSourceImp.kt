@@ -126,13 +126,12 @@ class UserLocalDataSourceImp(
     }
 
     override fun getLastKnownLocation(): Pair<Float, Float> {
-        val lat = sharedPreferences.getFloat(KEY_LAST_KNOWN_LOCATION_LAT, 30.05533f)
-        val lon = sharedPreferences.getFloat(KEY_LAST_KNOWN_LOCATION_LON, 31.2031467f)
+        val lat = sharedPreferences.getFloat(KEY_LAST_KNOWN_LOCATION_LAT, 0f)
+        val lon = sharedPreferences.getFloat(KEY_LAST_KNOWN_LOCATION_LON,0f)
         return Pair(lat, lon)
     }
 
     private companion object {
-        const val PREFERENCES_NAME = "sky_preferences"
         const val KEY_APP_LANGUAGE = "app_language"
         const val KEY_UINT = "sky_key_unit"
         const val KEY_LAST_KNOWN_LOCATION_LAT = "last_known_location_lat"

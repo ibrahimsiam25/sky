@@ -92,5 +92,5 @@
     <string name="select_end_time_hint">اختار وقت النهاية (بعد البداية)</string>
     <string name="error_no_internet">لا يوجد اتصال بالإنترنت.</string>
     <string name="error_no_internet_no_cache">لا يوجد إنترنت ولا توجد بيانات طقس محفوظة محلياً.</string>
-    <string name="network_back_refreshing">رجع الإنترنت. جاري تحديث الطقس...</string>
+    <string name="network_back_refreshing">عودة الانترنت. جاري تحديث الطقس...</string>
 </resources>

@@ -50,11 +50,6 @@ class MainActivity : ComponentActivity() {
         // Reduce edge-to-edge for nav bar only as fallback on OEMs that ignore transparent/color in gesture mode
         val contentView = findViewById<android.view.View>(android.R.id.content)
         window.setBackgroundDrawable(ColorDrawable(systemBarColor))
-        ViewCompat.setOnApplyWindowInsetsListener(contentView) { view, insets ->
-            val bottom = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
-            view.setPadding(0, 0, 0, bottom)
-            insets
-        }
 
         setContent {
             SkyTheme {

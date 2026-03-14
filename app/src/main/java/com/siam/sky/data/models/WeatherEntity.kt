@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 data class WeatherEntity(
     @PrimaryKey
     val locationKey: String,
-    val weatherJson: String = "",
-    val hourlyJson: String = "",
-    val dailyJson: String = "",
+    val weatherResponse: WeatherResponse? = null,
+    val hourlyResponse: HourlyForecastResponse? = null,
+    val dailyResponse: DailyForecastResponse? = null,
     val cachedAt: Long = System.currentTimeMillis()
 )

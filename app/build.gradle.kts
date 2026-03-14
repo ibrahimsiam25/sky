@@ -54,11 +54,22 @@ android {
         compose = true
         buildConfig =true
     }
+    
+    packaging {
+        resources {
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE-notice.md"
+            excludes += "META-INF/LICENSE"
+            excludes += "META-INF/LICENSE.txt"
+            excludes += "META-INF/NOTICE"
+            excludes += "META-INF/NOTICE.txt"
+        }
+    }
 }
 
 dependencies {
 
-    val koin_android_version = "4.0.2"
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -72,6 +83,7 @@ dependencies {
     implementation(libs.play.services.tasks)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.runner)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -94,14 +106,34 @@ dependencies {
     // Compose
     implementation ("com.github.bumptech.glide:compose:1.0.0-beta01")
     implementation("com.google.android.gms:play-services-location:21.3.0")
+    // Koin dependency injection
+    val koin_android_version = "4.0.2"
     implementation("io.insert-koin:koin-android:$koin_android_version")
     implementation("io.insert-koin:koin-androidx-compose:$koin_android_version")
     implementation("io.insert-koin:koin-androidx-compose-navigation:$koin_android_version")
 
-    // Google Maps SDK for Android
+    // Google maps
     implementation(libs.places)
     implementation(libs.play.services.maps)
-
-// Google maps Compose
     implementation(libs.maps.compose)
+
+    // Tests dependencies
+    val coroutinesTestVersion = "1.8.0"
+    val mockkVersion = "1.13.10"
+    val archCoreVersion = "2.2.0"
+
+    // Unit tests
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTestVersion")
+    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("io.mockk:mockk-agent:$mockkVersion")
+    testImplementation("androidx.arch.core:core-testing:$archCoreVersion")
+    testImplementation("org.robolectric:robolectric:4.16")
+
+    // Android/Instrumented tests
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTestVersion")
+    androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
+    androidTestImplementation("io.mockk:mockk-agent:$mockkVersion")
+    androidTestImplementation("androidx.arch.core:core-testing:$archCoreVersion")
 }

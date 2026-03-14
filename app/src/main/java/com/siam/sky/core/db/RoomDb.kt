@@ -15,7 +15,7 @@ import com.siam.sky.data.models.FavouriteLocationEntity
 
 @Database(
     entities = [WeatherEntity::class, AlertModel::class, FavouriteLocationEntity::class],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

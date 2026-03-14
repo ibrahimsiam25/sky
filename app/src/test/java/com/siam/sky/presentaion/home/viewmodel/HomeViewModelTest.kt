@@ -57,10 +57,7 @@ class HomeViewModelTest {
         homeViewModel = HomeViewModel(userRepo, weatherRepo, networkMonitor)
     }
 
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
+
 
     @Test
     fun setPermissionStatus_updatesStateStatusIsNotNull() {

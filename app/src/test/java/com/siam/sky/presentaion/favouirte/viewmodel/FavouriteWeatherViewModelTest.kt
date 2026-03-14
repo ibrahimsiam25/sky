@@ -63,10 +63,6 @@ class FavouriteWeatherViewModelTest {
         )
     }
 
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
 
     @Test
     fun init_defaultUnitStateIsSetCorrectly() {

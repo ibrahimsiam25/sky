@@ -17,11 +17,24 @@ class AlertsViewModel(private val userRepo: UserRepo) : ViewModel() {
     init {
         viewModelScope.launch {
             userRepo.getAllAlerts().collect { alerts ->
-                // Auto-delete alerts whose start time has already passed
+
                 val now = System.currentTimeMillis()
                 val started = alerts.filter { it.startTime <= now }
                 started.forEach { userRepo.deleteAlert(it) }
                 _alertsState.value = alerts.filter { it.startTime > now }
+            }
+        }
+    }
+
+    fun checkAndRemoveExpiredAlerts() {
+        val now = System.currentTimeMillis()
+        val currentAlerts = _alertsState.value
+        val expiredAlerts = currentAlerts.filter { it.startTime <= now }
+        
+        if (expiredAlerts.isNotEmpty()) {
+            viewModelScope.launch {
+                expiredAlerts.forEach { userRepo.deleteAlert(it) }
+
             }
         }
     }

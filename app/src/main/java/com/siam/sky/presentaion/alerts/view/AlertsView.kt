@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,6 +26,7 @@ import com.siam.sky.R
 import com.siam.sky.core.common.Background
 import com.siam.sky.data.models.AlertModel
 import com.siam.sky.presentaion.alerts.viewmodel.AlertsViewModel
+import kotlinx.coroutines.delay
 import java.util.*
 import org.koin.androidx.compose.koinViewModel
 
@@ -37,6 +39,12 @@ fun AlertsView() {
     var showDialog by remember { mutableStateOf(false) }
     var showPermissionRationale by remember { mutableStateOf(false) }
 
+    LaunchedEffect(Unit) {
+        while (true) {
+            viewModel.checkAndRemoveExpiredAlerts()
+            delay(5000) 
+        }
+    }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -72,6 +80,7 @@ fun AlertsView() {
             AlertsList(
                 alerts = alerts,
                 onToggle = { viewModel.toggleAlert(it) },
+                onDelete = { viewModel.removeAlert(it) },
                 modifier = Modifier.weight(1f)
             )
         }
@@ -124,10 +133,12 @@ private fun AlertsHeader() {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AlertsList(
     alerts: List<AlertModel>,
     onToggle: (AlertModel) -> Unit,
+    onDelete: (AlertModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -135,7 +146,34 @@ private fun AlertsList(
         modifier = modifier
     ) {
         items(alerts, key = { it.id }) { alert ->
-            AlertItemCard(alert = alert, onToggle = onToggle)
+            val dismissState = rememberSwipeToDismissBoxState(
+                confirmValueChange = {
+                    if (it == SwipeToDismissBoxValue.EndToStart || it == SwipeToDismissBoxValue.StartToEnd) {
+                        onDelete(alert)
+                        true
+                    } else false
+                }
+            )
+
+            SwipeToDismissBox(
+                state = dismissState,
+                backgroundContent = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 20.dp),
+                        contentAlignment = Alignment.CenterEnd
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete",
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            ) {
+                AlertItemCard(alert = alert, onToggle = onToggle)
+            }
         }
     }
 }

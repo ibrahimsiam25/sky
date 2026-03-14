@@ -1,4 +1,4 @@
-package com.siam.sky.data.datasources.local
+package com.siam.sky.data.datasources.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

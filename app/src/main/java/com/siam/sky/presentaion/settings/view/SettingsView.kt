@@ -25,24 +25,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.siam.sky.R
 import com.siam.sky.core.helper.AppLanguage
 import com.siam.sky.core.helper.AppLocaleManager
-import com.siam.sky.data.datasources.local.UserLocalDataSource
-import com.siam.sky.data.repo.UserRepo
 import com.siam.sky.presentaion.settings.viewmodel.SettingsViewModel
 import com.siam.sky.core.common.Background
 import com.siam.sky.core.helper.AppLoctionMode
 import com.siam.sky.core.helper.AppUnit
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingsView(onNavigateToMap: () -> Unit) {
     val context = LocalContext.current
     val activity = context.findActivity()
-    val viewModel: SettingsViewModel = viewModel(
-        factory = SettingsViewModel.factory(UserRepo(UserLocalDataSource(context)))
-    )
+    val viewModel: SettingsViewModel = koinViewModel()
     val selectedLanguage by viewModel.selectedLanguage.collectAsState()
     val selectedUnit by viewModel.selectedUnit.collectAsState()
     val selectedLocationMode by viewModel.selectedLocationMode.collectAsState()

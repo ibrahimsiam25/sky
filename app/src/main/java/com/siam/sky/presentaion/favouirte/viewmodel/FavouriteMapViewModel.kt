@@ -1,7 +1,6 @@
 package com.siam.sky.presentaion.favouirte.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.siam.sky.core.ResponseState
 import com.siam.sky.data.models.CityModel
@@ -100,12 +99,4 @@ class FavouriteMapViewModel(
         return resolvedName
     }
 
-    companion object {
-        fun factory(weatherRepo: WeatherRepo) = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return FavouriteMapViewModel(weatherRepo) as T
-            }
-        }
-    }
 }

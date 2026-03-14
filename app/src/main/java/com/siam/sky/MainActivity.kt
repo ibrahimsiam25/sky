@@ -15,13 +15,13 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.siam.sky.core.helper.AppLocaleManager
 import com.siam.sky.routes.App
 import com.siam.sky.ui.theme.SkyTheme
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel by inject()
 
     override fun attachBaseContext(newBase: Context) {
-        mainViewModel = MainViewModel.create(newBase)
         val localizedContext = AppLocaleManager.wrapContext(
             context = newBase,
             language = mainViewModel.getSavedAppLanguage()

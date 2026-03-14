@@ -1,7 +1,6 @@
 package com.siam.sky.presentaion.alerts.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.siam.sky.data.models.AlertModel
 import com.siam.sky.data.repo.UserRepo
@@ -53,14 +52,4 @@ class AlertsViewModel(private val userRepo: UserRepo) : ViewModel() {
         }
     }
 
-    companion object {
-        fun factory(userRepo: UserRepo): ViewModelProvider.Factory {
-            return object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return AlertsViewModel(userRepo) as T
-                }
-            }
-        }
-    }
 }

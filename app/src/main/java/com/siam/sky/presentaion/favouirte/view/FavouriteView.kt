@@ -28,35 +28,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.siam.sky.core.db.WeatherDataBase
-import com.siam.sky.data.datasources.local.FavouriteLocalDataSource
-import com.siam.sky.data.datasources.local.WeatherLocalDataSource
-import com.siam.sky.data.datasources.remote.WeatherRemoteDataSource
-import com.siam.sky.core.network.NetworkMonitor
 import com.siam.sky.data.models.FavouriteLocationEntity
-import com.siam.sky.data.repo.WeatherRepo
 import com.siam.sky.presentaion.favouirte.viewmodel.FavouriteViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FavouriteView(
     onNavigateToMap: () -> Unit,
     onNavigateToDetails: (Double, Double) -> Unit
 ) {
-    val context = LocalContext.current
-    val database = WeatherDataBase.getInstance(context)
-    val networkMonitor = NetworkMonitor(context)
-    val viewModel: FavouriteViewModel = viewModel(
-        factory = FavouriteViewModel.factory(
-            WeatherRepo(
-                WeatherRemoteDataSource(),
-                WeatherLocalDataSource(database.getWeatherDao()),
-                FavouriteLocalDataSource(database.getFavouriteLocationDao()),
-                networkMonitor
-            )
-        )
-    )
+    val viewModel: FavouriteViewModel = koinViewModel()
     val favourites by viewModel.favouritesState.collectAsState()
     var pendingDelete by remember { mutableStateOf<FavouriteLocationEntity?>(null) }
 

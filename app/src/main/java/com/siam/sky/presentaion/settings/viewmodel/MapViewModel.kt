@@ -1,7 +1,6 @@
 package com.siam.sky.presentaion.settings.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.siam.sky.core.helper.AppLoctionMode
 import com.siam.sky.data.repo.UserRepo
@@ -58,12 +57,4 @@ class MapViewModel(private val userRepo: UserRepo) : ViewModel() {
         onDone()
     }
 
-    companion object {
-        fun factory(userRepo: UserRepo) = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return MapViewModel(userRepo) as T
-            }
-        }
-    }
 }

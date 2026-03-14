@@ -58,6 +58,8 @@ android {
 
 dependencies {
 
+    val koin_android_version = "4.0.2"
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -92,6 +94,9 @@ dependencies {
     // Compose
     implementation ("com.github.bumptech.glide:compose:1.0.0-beta01")
     implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation("io.insert-koin:koin-android:$koin_android_version")
+    implementation("io.insert-koin:koin-androidx-compose:$koin_android_version")
+    implementation("io.insert-koin:koin-androidx-compose-navigation:$koin_android_version")
 
     // Google Maps SDK for Android
     implementation(libs.places)

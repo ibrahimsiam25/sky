@@ -41,7 +41,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -50,21 +49,17 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.siam.sky.R
-import com.siam.sky.data.datasources.local.UserLocalDataSource
-import com.siam.sky.data.repo.UserRepo
 import com.siam.sky.presentaion.settings.viewmodel.MapViewModel
 import com.siam.sky.ui.theme.HourCardSelected
 import com.siam.sky.ui.theme.NavSurfaceBottom
 import com.siam.sky.ui.theme.NavSurfaceTop
 import com.siam.sky.ui.theme.NavStroke
 import com.siam.sky.ui.theme.WeekCardStart
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MapView(onNavigateBack: () -> Unit) {
-    val context = LocalContext.current
-    val viewModel: MapViewModel = viewModel(
-        factory = MapViewModel.factory(UserRepo(UserLocalDataSource(context)))
-    )
+    val viewModel: MapViewModel = koinViewModel()
 
     val pickedLocation by viewModel.pickedLocation.collectAsState()
     val isLoading by viewModel.isLoadingCurrentLocation.collectAsState()

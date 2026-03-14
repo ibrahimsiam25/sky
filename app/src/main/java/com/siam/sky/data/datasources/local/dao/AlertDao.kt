@@ -1,4 +1,4 @@
-package com.siam.sky.data.datasources.local
+package com.siam.sky.data.datasources.local.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AlertDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertAlert(alert: AlertModel)
 
     @Delete

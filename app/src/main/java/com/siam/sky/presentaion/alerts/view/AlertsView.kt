@@ -21,25 +21,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.siam.sky.R
 import com.siam.sky.core.common.Background
-import com.siam.sky.core.db.WeatherDataBase
-import com.siam.sky.data.datasources.local.UserLocalDataSource
 import com.siam.sky.data.models.AlertModel
-import com.siam.sky.data.repo.UserRepo
 import com.siam.sky.presentaion.alerts.viewmodel.AlertsViewModel
 import java.util.*
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AlertsView() {
     val context = LocalContext.current
-    val database = remember { WeatherDataBase.getInstance(context) }
-    val viewModel: AlertsViewModel = viewModel(
-        factory = AlertsViewModel.factory(
-            UserRepo(UserLocalDataSource(context, database.getAlertDao()))
-        )
-    )
+    val viewModel: AlertsViewModel = koinViewModel()
 
     val alerts by viewModel.alertsState.collectAsState()
     var showDialog by remember { mutableStateOf(false) }

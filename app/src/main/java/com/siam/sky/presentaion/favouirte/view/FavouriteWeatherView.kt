@@ -20,19 +20,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.siam.sky.R
-import com.siam.sky.data.datasources.local.UserLocalDataSource
-import com.siam.sky.data.datasources.remote.WeatherRemoteDataSource
-import com.siam.sky.data.repo.UserRepo
-import com.siam.sky.data.repo.WeatherRepo
 import com.siam.sky.presentaion.favouirte.viewmodel.FavouriteWeatherViewModel
 import com.siam.sky.presentaion.home.view.HomeScaffold
-import com.siam.sky.core.db.WeatherDataBase
-import com.siam.sky.core.network.NetworkMonitor
-import com.siam.sky.data.datasources.local.FavouriteLocalDataSource
-import com.siam.sky.data.datasources.local.WeatherLocalDataSource
 import kotlinx.coroutines.flow.collectLatest
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun FavouriteWeatherView(
@@ -41,20 +34,8 @@ fun FavouriteWeatherView(
     onNavigateBack: () -> Unit
 ) {
     val context = LocalContext.current
-    val networkMonitor = NetworkMonitor(context)
-    val viewModel: FavouriteWeatherViewModel = viewModel(
-        factory = FavouriteWeatherViewModel.factory(
-            lat = lat,
-            lon = lon,
-            userRepo = UserRepo(UserLocalDataSource(context)),
-            weatherRepo = WeatherRepo(
-                WeatherRemoteDataSource(),
-                WeatherLocalDataSource(WeatherDataBase.getInstance(context).getWeatherDao()),
-                FavouriteLocalDataSource(WeatherDataBase.getInstance(context).getFavouriteLocationDao()),
-                networkMonitor
-            ),
-            networkMonitor = networkMonitor
-        )
+    val viewModel: FavouriteWeatherViewModel = koinViewModel(
+        parameters = { parametersOf(lat, lon) }
     )
 
     val weatherState by viewModel.weatherState.collectAsState()

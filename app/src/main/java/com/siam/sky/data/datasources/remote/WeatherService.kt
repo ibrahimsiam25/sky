@@ -1,7 +1,6 @@
 package com.siam.sky.data.datasources.remote
 
 import com.siam.sky.BuildConfig
-import com.siam.sky.core.network.RetrofitHelper
 import com.siam.sky.data.models.CityResponse
 import com.siam.sky.data.models.DailyForecastResponse
 import com.siam.sky.data.models.HourlyForecastResponse

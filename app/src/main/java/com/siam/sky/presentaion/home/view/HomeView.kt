@@ -9,34 +9,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import android.widget.Toast
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.siam.sky.data.datasources.local.UserLocalDataSource
-import com.siam.sky.data.datasources.remote.WeatherRemoteDataSource
-import com.siam.sky.data.repo.UserRepo
-import com.siam.sky.data.repo.WeatherRepo
 import com.siam.sky.presentaion.home.viewmodel.HomeViewModel
-import com.siam.sky.core.db.WeatherDataBase
-import com.siam.sky.core.network.NetworkMonitor
-import com.siam.sky.data.datasources.local.FavouriteLocalDataSource
-import com.siam.sky.data.datasources.local.WeatherLocalDataSource
 import kotlinx.coroutines.flow.collectLatest
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeView() {
     val context = LocalContext.current
-    val networkMonitor = NetworkMonitor(context)
-    val viewModel: HomeViewModel = viewModel(
-        factory = HomeViewModel.factory(UserRepo(UserLocalDataSource(context)),
-            WeatherRepo(
-                WeatherRemoteDataSource(),
-                WeatherLocalDataSource(WeatherDataBase.getInstance(context).getWeatherDao()),
-                FavouriteLocalDataSource(WeatherDataBase.getInstance(context).getFavouriteLocationDao()),
-                networkMonitor
-            ),
-            networkMonitor
-        )
-    )
+    val viewModel: HomeViewModel = koinViewModel()
     val permissionHandler = remember(viewModel) { HomePermissionHandler(viewModel) }
 
     val location by viewModel.locationState.collectAsState()

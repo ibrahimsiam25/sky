@@ -6,9 +6,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.siam.sky.data.datasources.local.AlertDao
-import com.siam.sky.data.datasources.local.FavouriteLocationDao
-import com.siam.sky.data.datasources.local.WeatherDao
+import com.siam.sky.data.datasources.local.dao.AlertDao
+import com.siam.sky.data.datasources.local.dao.FavouriteLocationDao
+import com.siam.sky.data.datasources.local.dao.WeatherDao
 import com.siam.sky.data.models.AlertModel
 import com.siam.sky.data.models.WeatherEntity
 import com.siam.sky.data.models.FavouriteLocationEntity

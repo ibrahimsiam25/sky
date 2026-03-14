@@ -2,7 +2,6 @@ package com.siam.sky.presentaion.home.viewmodel
 
 import android.location.Location
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.siam.sky.R
 import com.siam.sky.core.ResponseState
@@ -240,15 +239,6 @@ class HomeViewModel(
         }
     }
 
-    companion object {
-        fun factory(userRepo: UserRepo, weatherRepo: WeatherRepo, networkMonitor: NetworkMonitor) =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return HomeViewModel(userRepo, weatherRepo, networkMonitor) as T
-                }
-            }
-    }
 }
 
 
